@@ -79,6 +79,10 @@ window.sitePageData = {
             {
               label: "Journal version",
               url: "https://doi.org/10.1098/rsta.2024.0420"
+            },
+            {
+              label: "Poster",
+              url: "http://www.fields.utoronto.ca/sites/default/files/uploads/1.jpg"
             }
           ]
         },
