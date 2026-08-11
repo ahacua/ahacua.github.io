@@ -6,7 +6,7 @@ window.sitePageData = {
     location: "Lancaster, UK",
     summary: "",
     downloadLabel: "Download PDF",
-    downloadHref: "../assets/cv.pdf",
+    downloadHref: "/assets/Antonio-Acuaviva-CV.pdf",
     downloadFilename: "Antonio-Acuaviva-CV.pdf"
   },
   sections: [
@@ -20,7 +20,7 @@ window.sitePageData = {
           location: "Lancaster, UK",
           dates: "October 2023 - Present",
           bullets: [
-            "Awarded the Pure Mathematics Prize for exceptional performance during the first year of the PhD program.",
+            "Awarded the Pure Mathematics Prize for exceptional performance during the first and third years of the PhD program.",
             "Conducting research in Functional Analysis, supported by an EPSRC DTP Fellowship."
           ]
         },
@@ -128,8 +128,8 @@ window.sitePageData = {
       title: "Honors and Awards",
       kind: "awards",
       entries: [
+        { title: "Pure Mathematics Prize", organization: "Lancaster University", year: "2024 & 2026" },
         { title: "Spring Into Quant Finance Programme", organization: "G-Research", year: "2025" },
-        { title: "Pure Mathematics Prize", organization: "Lancaster University", year: "2024" },
         { title: "1912 Senior Scholarship", organization: "Fitzwilliam College, University of Cambridge", year: "2023" },
         { title: "Fitzwilliam College Prize", organization: "Fitzwilliam College, University of Cambridge", year: "2023" },
         { title: "Postgraduate Fellowship Abroad", organization: "\"la Caixa\" Foundation", year: "2022" },

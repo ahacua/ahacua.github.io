@@ -124,6 +124,132 @@ window.sitePageData = {
       items: [
         {
           authors: "A. Acuaviva",
+          title: "The uniform primary factorisation property for C(K, E)",
+          venue: "ResearchGate",
+          details: "411984474",
+          year: "2026",
+          status: "Preprint",
+          links: [
+            {
+              label: "ResearchGate",
+              url: "https://www.researchgate.net/publication/411984474_The_uniform_primary_factorisation_property_for_CK_E"
+            }
+          ]
+        },
+        {
+          authors: "A. Acuaviva, A. Acuaviva, and P. Acuaviva",
+          title: "CNOT-Distance is NP-complete under all-to-all connectivity",
+          venue: "arXiv",
+          details: "2608.03825",
+          year: "2026",
+          status: "Preprint",
+          links: [
+            {
+              label: "arXiv",
+              url: "https://arxiv.org/abs/2608.03825"
+            }
+          ]
+        },
+        {
+          authors: "A. Acuaviva and P. Acuaviva",
+          title: "Mathematical Discovery in the Wild: AI-Guided Proofs in Banach Space Theory",
+          venue: "arXiv",
+          details: "2607.17388",
+          year: "2026",
+          status: "Preprint",
+          links: [
+            {
+              label: "arXiv",
+              url: "https://arxiv.org/abs/2607.17388"
+            }
+          ]
+        },
+        {
+          authors: "A. Acuaviva and P. Acuaviva",
+          title: "A Unital Banach Algebra Which Is Not a Calkin Algebra",
+          venue: "arXiv",
+          details: "2607.15075",
+          year: "2026",
+          status: "Preprint",
+          links: [
+            {
+              label: "arXiv",
+              url: "https://arxiv.org/abs/2607.15075"
+            }
+          ]
+        },
+        {
+          authors: "A. Acuaviva",
+          title: "A Separable Banach Space with a Schauder Basis Which Is Not a Lipschitz Retract of Its Bidual",
+          venue: "arXiv",
+          details: "2607.12935",
+          year: "2026",
+          status: "Preprint",
+          links: [
+            {
+              label: "arXiv",
+              url: "https://arxiv.org/abs/2607.12935"
+            }
+          ]
+        },
+        {
+          authors: "A. Acuaviva, B. Horv\u00e1th, and T. Kania",
+          title: "Pure infiniteness and primary factorisation",
+          venue: "arXiv",
+          details: "2607.01467",
+          year: "2026",
+          status: "Preprint",
+          links: [
+            {
+              label: "arXiv",
+              url: "https://arxiv.org/abs/2607.01467"
+            }
+          ]
+        },
+        {
+          authors: "A. Acuaviva",
+          title: "Preservation of primariness under \u2113\u2081-, c\u2080-, and \u2113\u221e-sums of Banach spaces",
+          venue: "arXiv",
+          details: "2606.26417",
+          year: "2026",
+          status: "Preprint",
+          links: [
+            {
+              label: "arXiv",
+              url: "https://arxiv.org/abs/2606.26417"
+            }
+          ]
+        },
+        {
+          authors: "A. Acuaviva",
+          title: "Primariness of the spaces \u2113\u209a(C(K)) for 1 \u2264 p \u2264 \u221e",
+          venue: "arXiv",
+          details: "2605.29854",
+          year: "2026",
+          status: "Preprint",
+          links: [
+            {
+              label: "arXiv",
+              url: "https://arxiv.org/abs/2605.29854"
+            }
+          ]
+        },
+        {
+          authors: "A. Acuaviva and T. Kania",
+          title: "Primariness and the Primary Factorisation Property",
+          venue: "arXiv",
+          details: "2605.21711",
+          year: "2026",
+          status: "Preprint",
+          links: [
+            {
+              label: "arXiv",
+              url: "https://arxiv.org/abs/2605.21711"
+            }
+          ]
+        },
+        {
+          authors: "A. Acuaviva",
           title: "C(K)-spaces with few operators relative to posets",
           venue: "arXiv",
           details: "2511.22339",

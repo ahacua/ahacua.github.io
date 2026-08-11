@@ -117,7 +117,7 @@
           (data.links && data.links.length ? (
             '<div class="profile-links" aria-label="Professional links">' +
               data.links.map(function (link) {
-                return '<a class="profile-link" href="' + escapeHtml(link.href) + '" target="_blank" rel="noreferrer noopener">' + getProfileLinkIcon(link.label) + '<span>' + escapeHtml(link.label) + "</span></a>";
+                return '<a class="profile-link" href="' + escapeHtml(link.href) + '" target="_blank" rel="me noreferrer noopener">' + getProfileLinkIcon(link.label) + '<span>' + escapeHtml(link.label) + "</span></a>";
               }).join("") +
             "</div>"
           ) : "") +

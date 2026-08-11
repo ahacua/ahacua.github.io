@@ -3,7 +3,7 @@ window.sitePageData = {
     eyebrow: "Home",
     title: "Antonio Acuaviva",
     meta: "PhD Candidate in Mathematics | Lancaster University",
-    image: "assets/hero.jpeg",
+    image: "/assets/hero.jpeg",
     imageAlt: "Sunset over the sea",
     summary:
       "I am a PhD candidate in Mathematics at Lancaster University, working in Functional Analysis with a focus on Banach spaces and operator theory."
@@ -25,6 +25,10 @@ about: [
     {
       label: "ORCID",
       href: "https://orcid.org/0009-0000-5396-0441"
+    },
+    {
+      label: "GitHub",
+      href: "https://github.com/ahacua"
     }
   ]
 };

@@ -3,7 +3,61 @@ window.sitePageData = {
   empty_message: "No talks have been added yet.",
   items: [
     {
-      title: "The Class of Banach Lattices is not primary",
+      title: "The class of Banach lattices is not primary",
+      event: "Seminar on Geometry of Banach Spaces",
+      eventUrl: "https://banach.im.uj.edu.pl/",
+      location: "Institute of Mathematics, Jagiellonian University, Kraków, Poland",
+      date: "20 May 2026",
+      note: "Seminar talk.",
+      links: [
+        {
+          label: "Journal version",
+          url: "https://www.cambridge.org/core/journals/forum-of-mathematics-sigma/article/class-of-banach-lattices-is-not-primary/A867D4391DB6627FDE91B5920D0553CF"
+        }
+      ]
+    },
+
+    {
+      title: "Banach space constructions from almost disjoint families",
+      event: "Working Group in Applications of Set Theory",
+      eventUrl: "https://piotrkoszmider.github.io/seminar/",
+      location: "Room 403, Institute of Mathematics of the Polish Academy of Sciences (IMPAN), ul. Śniadeckich 8, Warsaw, Poland",
+      date: "14 May 2026",
+      note: "Seminar talk."
+    },
+
+    {
+      title: "C(K)-spaces with few operators relative to posets",
+      event: "Topology and Set Theory Seminar",
+      eventUrl: "https://www.mimuw.edu.pl/pl/seminaria/referat/c-k-spaces-with-few-operators-relative-to-posets/",
+      location: "Room 4050, Faculty of Mathematics, Informatics and Mechanics, University of Warsaw, ul. Banacha 2, Warsaw, Poland",
+      date: "13 May 2026",
+      note: "Seminar talk.",
+      links: [
+        {
+          label: "arXiv",
+          url: "https://arxiv.org/abs/2511.22339"
+        }
+      ]
+    },
+
+    {
+      title: "The class of Banach lattices is not primary",
+      event: "Functional Analysis Seminar",
+      eventUrl: "https://www.impan.pl/~biuletyn/st-q5c0.html",
+      location: "Room 6, Institute of Mathematics of the Polish Academy of Sciences (IMPAN), ul. Śniadeckich 8, Warsaw, Poland",
+      date: "12 May 2026",
+      note: "Seminar talk.",
+      links: [
+        {
+          label: "Journal version",
+          url: "https://www.cambridge.org/core/journals/forum-of-mathematics-sigma/article/class-of-banach-lattices-is-not-primary/A867D4391DB6627FDE91B5920D0553CF"
+        }
+      ]
+    },
+
+    {
+      title: "The class of Banach lattices is not primary",
       event: "Young Functional Analysts' Workshop 2026",
       eventUrl: "https://sites.google.com/site/yfawuk/previous-meetings/yfaw-2024-in-newcastle/participants",
       location: "School of Mathematics (Abacws), Cardiff University, Cardiff, Wales, UK",
@@ -12,7 +66,7 @@ window.sitePageData = {
       links: [
         {
           label: "Slides",
-          url: "../assets/slides/the_class_of_banach_lattices_is_not_primary.pdf",
+          url: "/assets/slides/the_class_of_banach_lattices_is_not_primary.pdf",
           download: true,
           downloadFilename: "the_class_of_banach_lattices_is_not_primary.pdf"
         }
@@ -29,7 +83,7 @@ window.sitePageData = {
       links: [
         {
           label: "Slides",
-          url: "../assets/slides/factorizations_and_minimal_norms_2.pdf",
+          url: "/assets/slides/factorizations_and_minimal_norms_2.pdf",
           download: true,
           downloadFilename: "factorizations_and_minimal_norms_2.pdf"
         }
@@ -46,7 +100,7 @@ window.sitePageData = {
       links: [
         {
           label: "Slides",
-          url: "../assets/slides/factorizations_and_minimal_norms.pdf",
+          url: "/assets/slides/factorizations_and_minimal_norms.pdf",
           download: true,
           downloadFilename: "factorizations_and_minimal_norms.pdf"
         }
@@ -62,7 +116,7 @@ window.sitePageData = {
       links: [
         {
           label: "Slides",
-          url: "../assets/slides/factorizations_and_minimal_norms.pdf",
+          url: "/assets/slides/factorizations_and_minimal_norms.pdf",
           download: true,
           downloadFilename: "factorizations_and_minimal_norms.pdf"
         }
