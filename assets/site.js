@@ -237,54 +237,194 @@
   }
 
   function renderResearch() {
+    var categories = data.categories || [];
+    var totalPublications = categories.reduce(function (total, category) {
+      return total + ((category.items && category.items.length) || 0);
+    }, 0);
+    var categoryFilters = categories.map(function (category, index) {
+      return {
+        key: category.key || "category-" + index,
+        label: category.filterLabel || category.title
+      };
+    });
+    var filterPriority = { preprints: 0, journals: 1, proceedings: 2 };
+    var filterButtons;
+
+    categoryFilters.sort(function (left, right) {
+      var leftPriority = Object.prototype.hasOwnProperty.call(filterPriority, left.key) ? filterPriority[left.key] : 99;
+      var rightPriority = Object.prototype.hasOwnProperty.call(filterPriority, right.key) ? filterPriority[right.key] : 99;
+
+      return leftPriority - rightPriority;
+    });
+
+    filterButtons = [{ key: "all", label: "All" }].concat(categoryFilters);
+    var publicationSections = categories.map(function (category, categoryIndex) {
+      var categoryKey = category.key || "category-" + categoryIndex;
+
+      return (
+        '<section class="page-section publication-group" data-publication-group="' + escapeHtml(categoryKey) + '">' +
+          '<h2 class="section-title">' + escapeHtml(category.title) + "</h2>" +
+          '<ol class="publications">' +
+            category.items.map(function (item) {
+              var links = "";
+
+              if (item.links && item.links.length) {
+                links =
+                  '<div class="publication__links" aria-label="Publication links">' +
+                  item.links.map(function (link) {
+                    return (
+                      '<a class="publication__link" href="' + escapeHtml(link.url) + '" target="_blank" rel="noreferrer noopener">' +
+                        '<span class="publication__link-icon">' + getLinkIcon(link.label) + "</span>" +
+                        '<span class="publication__link-label">' + escapeHtml(link.label) + "</span>" +
+                      "</a>"
+                    );
+                  }).join("") +
+                  "</div>";
+              }
+
+              return (
+                '<li class="publication" data-publication-item data-publication-kind="' + escapeHtml(categoryKey) + '">' +
+                  '<div class="publication__year">' + escapeHtml(item.year) + "</div>" +
+                  '<div class="publication__body">' +
+                    '<h3 class="publication__title">' + escapeHtml(item.title) + "</h3>" +
+                    '<p class="publication__authors">' + escapeHtml(item.authors) + "</p>" +
+                    '<p class="publication__citation">' +
+                      '<span class="publication__venue">' + escapeHtml(item.venue) + "</span>" +
+                      (item.details ? ", " + escapeHtml(item.details) : "") +
+                      (item.status ? ' <span class="publication__status">' + escapeHtml(item.status) + "</span>" : "") +
+                    "</p>" +
+                    links +
+                  "</div>" +
+                "</li>"
+              );
+            }).join("") +
+          "</ol>" +
+        "</section>"
+      );
+    }).join("");
+
     app.innerHTML =
       '<section class="hero">' +
         '<p class="hero__eyebrow">Research</p>' +
         '<h1 class="hero__title">Publications</h1>' +
         (data.intro ? '<p class="page-intro">' + escapeHtml(data.intro) + "</p>" : "") +
       "</section>" +
-      data.categories.map(function (category) {
-        return (
-          '<section class="page-section">' +
-            '<h2 class="section-title">' + escapeHtml(category.title) + "</h2>" +
-            '<ol class="publications">' +
-              category.items.map(function (item) {
-                var links = "";
+      '<div class="publication-tools" role="search" aria-label="Search and filter publications">' +
+        '<div class="publication-search">' +
+          '<label class="publication-tools__label" for="publication-search">Search publications</label>' +
+          '<div class="publication-search__field">' +
+            '<span class="publication-search__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m20.7 19.3-4.1-4.1a7.5 7.5 0 1 0-1.4 1.4l4.1 4.1ZM5 11a6 6 0 1 1 12 0 6 6 0 0 1-12 0Z"/></svg></span>' +
+            '<input id="publication-search" type="search" autocomplete="off" spellcheck="false" placeholder="Title, author, venue, or arXiv ID" aria-controls="publication-groups">' +
+          "</div>" +
+        "</div>" +
+        '<div class="publication-filter">' +
+          '<span class="publication-tools__label" id="publication-filter-label">Show</span>' +
+          '<div class="publication-filter__buttons" role="group" aria-labelledby="publication-filter-label">' +
+            filterButtons.map(function (filter, index) {
+              return (
+                '<button class="publication-filter__button" type="button" data-publication-filter="' + escapeHtml(filter.key) + '" aria-pressed="' + (index === 0 ? "true" : "false") + '" aria-controls="publication-groups">' +
+                  escapeHtml(filter.label) +
+                "</button>"
+              );
+            }).join("") +
+          "</div>" +
+        "</div>" +
+        '<div class="publication-tools__summary">' +
+          '<p class="publication-results" id="publication-results" aria-live="polite">Showing ' + totalPublications + " publications</p>" +
+          (data.arxivUrl ? '<a class="publication-arxiv-link" href="' + escapeHtml(data.arxivUrl) + '" target="_blank" rel="noreferrer noopener">View complete arXiv record</a>' : "") +
+        "</div>" +
+      "</div>" +
+      '<div id="publication-groups">' + publicationSections + "</div>" +
+      '<section class="publication-empty" data-publication-empty hidden>' +
+        '<h2 class="publication-empty__title">No matching publications</h2>' +
+        '<p>Try another title, author, venue, arXiv ID, or publication type.</p>' +
+        '<button class="publication-clear" type="button" data-publication-clear>Clear search and filters</button>' +
+      "</section>";
+  }
 
-                if (item.links && item.links.length) {
-                  links =
-                    '<div class="publication__links" aria-label="Publication links">' +
-                    item.links.map(function (link) {
-                      return (
-                        '<a class="publication__link" href="' + escapeHtml(link.url) + '" target="_blank" rel="noreferrer noopener">' +
-                          '<span class="publication__link-icon">' + getLinkIcon(link.label) + "</span>" +
-                          '<span class="publication__link-label">' + escapeHtml(link.label) + "</span>" +
-                        "</a>"
-                      );
-                    }).join("") +
-                    "</div>";
-                }
+  function setupPublicationExplorer() {
+    if (typeof document.querySelector !== "function") {
+      return;
+    }
 
-                return (
-                  '<li class="publication">' +
-                    '<div class="publication__year">' + escapeHtml(item.year) + "</div>" +
-                    '<div class="publication__body">' +
-                      '<h3 class="publication__title">' + escapeHtml(item.title) + "</h3>" +
-                      '<p class="publication__authors">' + escapeHtml(item.authors) + "</p>" +
-                      '<p class="publication__citation">' +
-                        '<span class="publication__venue">' + escapeHtml(item.venue) + "</span>" +
-                        (item.details ? ", " + escapeHtml(item.details) : "") +
-                        (item.status ? ' <span class="publication__status">' + escapeHtml(item.status) + "</span>" : "") +
-                      "</p>" +
-                      links +
-                    "</div>" +
-                  "</li>"
-                );
-              }).join("") +
-            "</ol>" +
-          "</section>"
-        );
-      }).join("");
+    var searchInput = document.getElementById("publication-search");
+    var resultCount = document.getElementById("publication-results");
+    var items = Array.prototype.slice.call(document.querySelectorAll("[data-publication-item]"));
+    var groups = Array.prototype.slice.call(document.querySelectorAll("[data-publication-group]"));
+    var filterButtons = Array.prototype.slice.call(document.querySelectorAll("[data-publication-filter]"));
+    var emptyState = document.querySelector("[data-publication-empty]");
+    var clearButton = document.querySelector("[data-publication-clear]");
+    var activeFilter = "all";
+
+    if (!searchInput || !resultCount || !items.length) {
+      return;
+    }
+
+    function normalizeSearch(value) {
+      var normalized = String(value || "").toLowerCase();
+
+      if (typeof normalized.normalize === "function") {
+        normalized = normalized.normalize("NFKD").replace(/[\u0300-\u036f]/g, "");
+      }
+
+      return normalized.trim();
+    }
+
+    items.forEach(function (item) {
+      item._publicationSearchText = normalizeSearch(item.textContent);
+    });
+
+    function updatePublications() {
+      var query = normalizeSearch(searchInput.value);
+      var visibleCount = 0;
+
+      items.forEach(function (item) {
+        var matchesType = activeFilter === "all" || item.getAttribute("data-publication-kind") === activeFilter;
+        var matchesQuery = !query || item._publicationSearchText.indexOf(query) !== -1;
+        var isVisible = matchesType && matchesQuery;
+
+        item.hidden = !isVisible;
+
+        if (isVisible) {
+          visibleCount += 1;
+        }
+      });
+
+      groups.forEach(function (group) {
+        var groupItems = Array.prototype.slice.call(group.querySelectorAll("[data-publication-item]"));
+        group.hidden = !groupItems.some(function (item) {
+          return !item.hidden;
+        });
+      });
+
+      filterButtons.forEach(function (button) {
+        button.setAttribute("aria-pressed", button.getAttribute("data-publication-filter") === activeFilter ? "true" : "false");
+      });
+
+      resultCount.textContent = "Showing " + visibleCount + (visibleCount === 1 ? " publication" : " publications");
+
+      if (emptyState) {
+        emptyState.hidden = visibleCount !== 0;
+      }
+    }
+
+    searchInput.addEventListener("input", updatePublications);
+
+    filterButtons.forEach(function (button) {
+      button.addEventListener("click", function () {
+        activeFilter = button.getAttribute("data-publication-filter") || "all";
+        updatePublications();
+      });
+    });
+
+    if (clearButton) {
+      clearButton.addEventListener("click", function () {
+        activeFilter = "all";
+        searchInput.value = "";
+        updatePublications();
+        searchInput.focus();
+      });
+    }
   }
 
   function renderTalks() {
@@ -353,6 +493,7 @@
     renderCV();
   } else if (page === "research") {
     renderResearch();
+    setupPublicationExplorer();
   } else if (page === "talks") {
     renderTalks();
   }

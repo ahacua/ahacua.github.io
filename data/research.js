@@ -1,7 +1,10 @@
 window.sitePageData = {
   intro: "",
+  arxivUrl: "https://arxiv.org/search/?query=Antonio+Acuaviva&searchtype=author&abstracts=show&order=-announced_date_first&size=50",
   categories: [
     {
+      key: "journals",
+      filterLabel: "Journal articles",
       title: "Journal Articles",
       items: [
         {
@@ -102,6 +105,8 @@ window.sitePageData = {
       ]
     },
     {
+      key: "proceedings",
+      filterLabel: "Proceedings",
       title: "Conference Proceedings",
       items: [
         {
@@ -120,8 +125,24 @@ window.sitePageData = {
       ]
     },
     {
+      key: "preprints",
+      filterLabel: "Preprints & submitted",
       title: "Preprints and Submitted Work",
       items: [
+        {
+          authors: "A. Acuaviva and T. Kania",
+          title: "Banach's Isometric Conjecture over the Complex Field",
+          venue: "arXiv",
+          details: "2608.18257",
+          year: "2026",
+          status: "Preprint",
+          links: [
+            {
+              label: "arXiv",
+              url: "https://arxiv.org/abs/2608.18257"
+            }
+          ]
+        },
         {
           authors: "A. Acuaviva",
           title: "The uniform primary factorisation property for C(K, E)",
@@ -259,6 +280,20 @@ window.sitePageData = {
             {
               label: "arXiv",
               url: "https://arxiv.org/abs/2511.22339"
+            }
+          ]
+        },
+        {
+          authors: "J. Bautista, A. Acuaviva, J. Hinojosa, W. Yao, J. Jimenez, and H. Garcia de Marina",
+          title: "Fully distributed and resilient source seeking for robot swarms",
+          venue: "arXiv",
+          details: "2410.15921",
+          year: "2024",
+          status: "Preprint",
+          links: [
+            {
+              label: "arXiv",
+              url: "https://arxiv.org/abs/2410.15921"
             }
           ]
         }
