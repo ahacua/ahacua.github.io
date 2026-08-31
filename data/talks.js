@@ -3,6 +3,21 @@ window.sitePageData = {
   empty_message: "No talks have been added yet.",
   items: [
     {
+      title: "Quantitative (Non-)Weak Compactness of Operators on L₁- and C(K)-Spaces",
+      event: "Brazilian Workshop on Banach Spaces (BWB 2026)",
+      eventUrl: "https://sites.google.com/view/bwb2026/program?authuser=0",
+      location: "Wembley Inn Hotel, Praia das Toninhas, Ubatuba, São Paulo, Brazil",
+      date: "26 August 2026",
+      note: "Workshop talk.",
+      links: [
+        {
+          label: "Slides",
+          url: "https://drive.google.com/file/d/1_bBI72JacgdSHlcJI9z1e2NTqpNYtrM9/view?usp=sharing"
+        }
+      ]
+    },
+
+    {
       title: "The class of Banach lattices is not primary",
       event: "Seminar on Geometry of Banach Spaces",
       eventUrl: "https://banach.im.uj.edu.pl/",
