@@ -74,7 +74,7 @@ window.sitePageData = {
     {
       title: "The class of Banach lattices is not primary",
       event: "Young Functional Analysts' Workshop 2026",
-      eventUrl: "https://sites.google.com/site/yfawuk/previous-meetings/yfaw-2024-in-newcastle/participants",
+      eventUrl: "https://sites.google.com/site/yfawuk/yfaw-2026-in-cardiff",
       location: "School of Mathematics (Abacws), Cardiff University, Cardiff, Wales, UK",
       date: "23-25 March 2026",
       note: "Workshop talk.",

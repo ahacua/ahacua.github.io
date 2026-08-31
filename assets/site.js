@@ -2,8 +2,9 @@
   var app = document.getElementById("app");
   var page = document.body ? document.body.dataset.page : "";
   var data = window.sitePageData;
+  var isBrowserRuntime = typeof document.querySelector === "function";
 
-  if (!app || !data) {
+  if (!app) {
     return;
   }
 
@@ -82,8 +83,9 @@
     );
   }
 
-  function renderEntry(entry) {
+  function renderEntry(entry, headingLevel) {
     var meta = [];
+    var headingTag = headingLevel === 4 ? "h4" : "h3";
 
     if (entry.location) {
       meta.push("<p>" + escapeHtml(entry.location) + "</p>");
@@ -97,7 +99,7 @@
       '<article class="entry">' +
         '<header class="entry__header">' +
           '<div class="entry__main">' +
-            '<h3 class="entry__title">' + escapeHtml(entry.title) + "</h3>" +
+            "<" + headingTag + ' class="entry__title">' + escapeHtml(entry.title) + "</" + headingTag + ">" +
             (entry.organization ? '<p class="entry__org">' + escapeHtml(entry.organization) + "</p>" : "") +
           "</div>" +
           '<div class="entry__meta">' + meta.join("") + "</div>" +
@@ -134,7 +136,7 @@
       "</section>" +
       '<section class="page-section page-section--image">' +
         '<div class="hero__media hero__media--closing">' +
-          '<img class="hero__image" src="' + escapeHtml(data.hero.image) + '" alt="' + escapeHtml(data.hero.imageAlt || "") + '">' +
+          '<img class="hero__image" src="' + escapeHtml(data.hero.image) + '" alt="' + escapeHtml(data.hero.imageAlt || "") + '" loading="lazy" decoding="async">' +
         "</div>" +
       "</section>";
   }
@@ -157,7 +159,9 @@
         return (
           '<section class="page-section">' +
             '<h2 class="section-title">' + escapeHtml(section.title) + "</h2>" +
-            section.entries.map(renderEntry).join("") +
+            section.entries.map(function (entry) {
+              return renderEntry(entry, 3);
+            }).join("") +
           "</section>"
         );
       }
@@ -170,7 +174,9 @@
               return (
                 '<div class="subsection">' +
                   '<h3 class="subsection-title">' + escapeHtml(group.title) + "</h3>" +
-                  group.entries.map(renderEntry).join("") +
+                  group.entries.map(function (entry) {
+                    return renderEntry(entry, 4);
+                  }).join("") +
                 "</div>"
               );
             }).join("") +
@@ -179,23 +185,32 @@
       }
 
       if (section.kind === "awards") {
+        var renderAward = function (award) {
+          return (
+            '<article class="award">' +
+              '<p class="award__year">' + escapeHtml(award.year) + "</p>" +
+              "<div>" +
+                '<h3 class="award__title">' + escapeHtml(award.title) + "</h3>" +
+                '<p class="award__detail">' + escapeHtml(award.organization) + "</p>" +
+                (award.note ? '<p class="award__detail">' + escapeHtml(award.note) + "</p>" : "") +
+              "</div>" +
+            "</article>"
+          );
+        };
+        var additionalAwards = section.additionalEntries || [];
+
         return (
           '<section class="page-section">' +
             '<h2 class="section-title">' + escapeHtml(section.title) + "</h2>" +
             '<div class="awards">' +
-              section.entries.map(function (award) {
-                return (
-                  '<article class="award">' +
-                    '<p class="award__year">' + escapeHtml(award.year) + "</p>" +
-                    "<div>" +
-                      '<h3 class="award__title">' + escapeHtml(award.title) + "</h3>" +
-                      '<p class="award__detail">' + escapeHtml(award.organization) + "</p>" +
-                      (award.note ? '<p class="award__detail">' + escapeHtml(award.note) + "</p>" : "") +
-                    "</div>" +
-                  "</article>"
-                );
-              }).join("") +
+              section.entries.map(renderAward).join("") +
             "</div>" +
+            (additionalAwards.length ? (
+              '<details class="cv-more">' +
+                '<summary>Earlier awards and scholarships</summary>' +
+                '<div class="awards awards--compact">' + additionalAwards.map(renderAward).join("") + "</div>" +
+              "</details>"
+            ) : "") +
           "</section>"
         );
       }
@@ -229,6 +244,7 @@
             '<h1 class="hero__title">' + escapeHtml(profile.name) + "</h1>" +
             ((profile.institution || profile.location) ? '<p class="hero__meta">' + escapeHtml((profile.institution || "") + ((profile.institution && profile.location) ? " | " : "") + (profile.location || "")) + "</p>" : "") +
             (profile.summary ? '<p class="hero__summary">' + escapeHtml(profile.summary) + "</p>" : "") +
+            (profile.lastUpdated ? '<p class="cv-updated">Last updated: ' + escapeHtml(profile.lastUpdated) + ".</p>" : "") +
           "</div>" +
           downloadLink +
         "</div>" +
@@ -311,7 +327,7 @@
         '<h1 class="hero__title">Publications</h1>' +
         (data.intro ? '<p class="page-intro">' + escapeHtml(data.intro) + "</p>" : "") +
       "</section>" +
-      '<div class="publication-tools" role="search" aria-label="Search and filter publications">' +
+      '<div class="publication-tools" data-publication-tools role="search" aria-label="Search and filter publications" hidden>' +
         '<div class="publication-search">' +
           '<label class="publication-tools__label" for="publication-search">Search publications</label>' +
           '<div class="publication-search__field">' +
@@ -369,11 +385,16 @@
     var subjectFilterButtons = Array.prototype.slice.call(document.querySelectorAll("[data-publication-subject-filter]"));
     var emptyState = document.querySelector("[data-publication-empty]");
     var clearButton = document.querySelector("[data-publication-clear]");
+    var publicationTools = document.querySelector("[data-publication-tools]");
     var activeTypeFilter = "all";
     var activeSubjectFilter = "all";
 
     if (!searchInput || !resultCount || !items.length) {
       return;
+    }
+
+    if (publicationTools) {
+      publicationTools.hidden = false;
     }
 
     function normalizeSearch(value) {
@@ -491,7 +512,7 @@
 
           return (
             '<article class="talk">' +
-              '<h3 class="talk__title">' + escapeHtml(talk.title) + "</h3>" +
+              '<h2 class="talk__title">' + escapeHtml(talk.title) + "</h2>" +
               '<p class="talk__detail">' + event + "</p>" +
               (talk.location ? '<p class="talk__detail">' + escapeHtml(talk.location) + "</p>" : "") +
               (talk.date ? '<p class="talk__detail">' + escapeHtml(talk.date) + "</p>" : "") +
@@ -516,13 +537,24 @@
       "</section>";
   }
 
+  if (isBrowserRuntime) {
+    if (page === "research") {
+      setupPublicationExplorer();
+    }
+
+    return;
+  }
+
+  if (!data) {
+    return;
+  }
+
   if (page === "home") {
     renderHome();
   } else if (page === "cv") {
     renderCV();
   } else if (page === "research") {
     renderResearch();
-    setupPublicationExplorer();
   } else if (page === "talks") {
     renderTalks();
   }

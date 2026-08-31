@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import vm from "node:vm";
+import crypto from "node:crypto";
 import { fileURLToPath } from "node:url";
 
 const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -15,6 +16,40 @@ const pages = [
 
 const startMarker = "<!-- static-content:start -->";
 const endMarker = "<!-- static-content:end -->";
+
+function collectAssetVersions(directory, urlPrefix = "/assets") {
+  const versions = new Map();
+
+  function visit(currentDirectory, currentUrlPrefix) {
+    fs.readdirSync(currentDirectory, { withFileTypes: true }).forEach((entry) => {
+      const filePath = path.join(currentDirectory, entry.name);
+      const assetUrl = `${currentUrlPrefix}/${entry.name}`;
+
+      if (entry.isDirectory()) {
+        visit(filePath, assetUrl);
+        return;
+      }
+
+      if (entry.isFile()) {
+        const digest = crypto.createHash("sha256").update(fs.readFileSync(filePath)).digest("hex").slice(0, 12);
+        versions.set(assetUrl, digest);
+      }
+    });
+  }
+
+  visit(directory, urlPrefix);
+  return versions;
+}
+
+const assetVersions = collectAssetVersions(path.join(projectRoot, "assets"));
+
+function versionAssetReferences(html) {
+  return html.replace(/((?:href|src)=")(\/assets\/[^"?#]+)(?:\?[^"#]*)?(\")/g, (match, prefix, assetUrl, suffix) => {
+    const version = assetVersions.get(assetUrl);
+
+    return version ? `${prefix}${assetUrl}?v=${version}${suffix}` : match;
+  });
+}
 
 function renderPage(page) {
   const app = { innerHTML: "" };
@@ -47,7 +82,8 @@ function renderPage(page) {
   }
 
   const replacement = `${startMarker}\n        ${app.innerHTML}\n        ${endMarker}`;
-  fs.writeFileSync(htmlPath, htmlSource.replace(markerPattern, replacement), "utf8");
+  const prerenderedHtml = htmlSource.replace(markerPattern, replacement);
+  fs.writeFileSync(htmlPath, versionAssetReferences(prerenderedHtml), "utf8");
   process.stdout.write(`Prerendered ${page.html}\n`);
 }
 

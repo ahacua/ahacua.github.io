@@ -1,0 +1,8 @@
+{
+  "private": true,
+  "scripts": {
+    "prerender": "node scripts/prerender.mjs",
+    "check": "node scripts/validate.mjs",
+    "build": "node scripts/prerender.mjs && node scripts/validate.mjs"
+  }
+}

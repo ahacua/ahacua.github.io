@@ -16,6 +16,10 @@
   box-sizing: border-box;
 }
 
+[hidden] {
+  display: none !important;
+}
+
 html {
   scroll-behavior: smooth;
 }
@@ -49,8 +53,38 @@ a:hover {
   text-decoration-color: rgba(127, 29, 29, 0.55);
 }
 
+a:focus-visible,
+summary:focus-visible {
+  outline: 3px solid var(--accent-ink);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
 img {
   max-width: 100%;
+}
+
+.skip-link {
+  position: fixed;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 100;
+  padding: 0.55rem 0.85rem;
+  border-radius: 8px;
+  background: var(--text);
+  color: #ffffff;
+  font-weight: 750;
+  text-decoration: none;
+  transform: translateY(-180%);
+}
+
+.skip-link:visited {
+  color: #ffffff;
+}
+
+.skip-link:focus-visible {
+  color: #ffffff;
+  transform: translateY(0);
 }
 
 .site-header {
@@ -189,6 +223,12 @@ img {
 .hero__summary {
   margin: 0.75rem 0 0;
   max-width: 46rem;
+}
+
+.cv-updated {
+  margin: 0.65rem 0 0;
+  color: var(--muted);
+  font-size: 0.9rem;
 }
 
 .hero__header {
@@ -358,6 +398,8 @@ img {
 }
 
 .publication-search input:focus-visible {
+  outline: 3px solid var(--accent-ink);
+  outline-offset: 2px;
   border-color: rgba(127, 29, 29, 0.65);
   box-shadow: 0 0 0 3px rgba(127, 29, 29, 0.12);
 }
@@ -374,7 +416,7 @@ img {
 
 .publication-filter__button,
 .publication-clear {
-  min-height: 2.35rem;
+  min-height: 2.75rem;
   padding: 0.48rem 0.78rem;
   border: 1px solid var(--border);
   border-radius: 999px;
@@ -403,7 +445,7 @@ img {
 
 .publication-filter__button:focus-visible,
 .publication-clear:focus-visible {
-  outline: 3px solid rgba(127, 29, 29, 0.2);
+  outline: 3px solid var(--accent-ink);
   outline-offset: 2px;
 }
 
@@ -553,18 +595,33 @@ img {
   font-weight: 800;
 }
 
+.cv-more {
+  margin-top: 0.8rem;
+  border-top: 1px solid var(--border);
+}
+
+.cv-more summary {
+  width: fit-content;
+  margin-top: 0.9rem;
+  color: var(--accent-ink);
+  cursor: pointer;
+  font-weight: 750;
+}
+
+.awards--compact {
+  margin-top: 0.35rem;
+}
+
+.awards--compact .award {
+  padding: 0.75rem 0;
+}
+
 .publication {
   display: grid;
   grid-template-columns: 5rem 1fr;
   gap: 0.75rem 1.4rem;
   align-items: start;
   padding: 1.15rem 0;
-}
-
-.publication[hidden],
-.publication-group[hidden],
-.publication-empty[hidden] {
-  display: none;
 }
 
 .publication__citation {
@@ -707,7 +764,11 @@ img {
     scroll-behavior: auto;
   }
 
-  .site-nav a {
-    transition: none;
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }

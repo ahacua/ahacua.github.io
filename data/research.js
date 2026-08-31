@@ -109,7 +109,7 @@ window.sitePageData = {
             },
             {
               label: "Poster",
-              url: "http://www.fields.utoronto.ca/sites/default/files/uploads/1.jpg"
+              url: "https://www.fields.utoronto.ca/sites/default/files/uploads/1.jpg"
             }
           ]
         },
@@ -171,7 +171,7 @@ window.sitePageData = {
           ]
         },
         {
-          authors: "A. Acuaviva",
+          authors: "A. Acuaviva and P. Acuaviva",
           title: "The uniform primary factorisation property for C(K, E)",
           venue: "ResearchGate",
           details: "411984474",
@@ -218,9 +218,10 @@ window.sitePageData = {
         {
           authors: "A. Acuaviva, J. Esson, E. Kastis, and B. Schulze",
           title: "Curved RUM spectra of periodic frameworks",
-          venue: "Submitted manuscript",
+          venue: "Manuscript",
           details: "",
           year: "2026",
+          status: "Submitted",
           subject: "other"
         },
         {
