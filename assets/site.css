@@ -561,6 +561,12 @@ img {
   padding: 1.15rem 0;
 }
 
+.publication[hidden],
+.publication-group[hidden],
+.publication-empty[hidden] {
+  display: none;
+}
+
 .publication__citation {
   margin: 0.35rem 0 0;
   color: var(--muted);

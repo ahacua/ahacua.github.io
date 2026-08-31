@@ -3,9 +3,7 @@ window.sitePageData = {
   arxivUrl: "https://arxiv.org/search/?query=Antonio+Acuaviva&searchtype=author&abstracts=show&order=-announced_date_first&size=50",
   subjects: [
     { key: "banach-space-theory", label: "Banach space theory" },
-    { key: "robotics-control", label: "Robotics & control" },
-    { key: "quantum-information", label: "Quantum information" },
-    { key: "other-analysis", label: "Other analysis" }
+    { key: "other", label: "Other" }
   ],
   categories: [
     {
@@ -19,7 +17,7 @@ window.sitePageData = {
           venue: "IEEE Transactions on Automatic Control",
           details: "pp. 1-16",
           year: "2026",
-          subject: "robotics-control",
+          subject: "other",
           links: [
             {
               label: "Journal version",
@@ -103,7 +101,7 @@ window.sitePageData = {
           venue: "Philosophical Transactions A: Mathematical, Physical and Engineering Sciences",
           details: "383",
           year: "2025",
-          subject: "quantum-information",
+          subject: "other",
           links: [
             {
               label: "Journal version",
@@ -121,7 +119,7 @@ window.sitePageData = {
           venue: "Analysis and Mathematical Physics",
           details: "12:53",
           year: "2022",
-          subject: "other-analysis",
+          subject: "other",
           links: [
             {
               label: "Journal version",
@@ -142,7 +140,7 @@ window.sitePageData = {
           venue: "Proceedings of the IEEE 63rd Conference on Decision and Control (CDC)",
           details: "Milan, Italy, pp. 57-63",
           year: "2024",
-          subject: "robotics-control",
+          subject: "other",
           links: [
             {
               label: "Proceedings",
@@ -194,7 +192,7 @@ window.sitePageData = {
           details: "2608.03825",
           year: "2026",
           status: "Preprint",
-          subject: "quantum-information",
+          subject: "other",
           links: [
             {
               label: "arXiv",
@@ -216,6 +214,14 @@ window.sitePageData = {
               url: "https://arxiv.org/abs/2607.17388"
             }
           ]
+        },
+        {
+          authors: "A. Acuaviva, J. Esson, E. Kastis, and B. Schulze",
+          title: "Curved RUM spectra of periodic frameworks",
+          venue: "Submitted manuscript",
+          details: "",
+          year: "2026",
+          subject: "other"
         },
         {
           authors: "A. Acuaviva and P. Acuaviva",
