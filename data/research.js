@@ -8,6 +8,19 @@ window.sitePageData = {
       title: "Journal Articles",
       items: [
         {
+          authors: "J. Bautista, A. Acuaviva, J. Hinojosa, W. Yao, J. Jimenez, and H. Garcia de Marina",
+          title: "Fully Distributed and Resilient Source Seeking for Robot Swarms",
+          venue: "IEEE Transactions on Automatic Control",
+          details: "pp. 1-16",
+          year: "2026",
+          links: [
+            {
+              label: "Journal version",
+              url: "https://ieeexplore.ieee.org/document/11664370"
+            }
+          ]
+        },
+        {
           authors: "A. Acuaviva",
           title: "The class of Banach lattices is not primary",
           venue: "Forum of Mathematics, Sigma",
@@ -280,20 +293,6 @@ window.sitePageData = {
             {
               label: "arXiv",
               url: "https://arxiv.org/abs/2511.22339"
-            }
-          ]
-        },
-        {
-          authors: "J. Bautista, A. Acuaviva, J. Hinojosa, W. Yao, J. Jimenez, and H. Garcia de Marina",
-          title: "Fully distributed and resilient source seeking for robot swarms",
-          venue: "arXiv",
-          details: "2410.15921",
-          year: "2024",
-          status: "Preprint",
-          links: [
-            {
-              label: "arXiv",
-              url: "https://arxiv.org/abs/2410.15921"
             }
           ]
         }
