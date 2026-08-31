@@ -238,6 +238,7 @@
 
   function renderResearch() {
     var categories = data.categories || [];
+    var subjects = data.subjects || [];
     var totalPublications = categories.reduce(function (total, category) {
       return total + ((category.items && category.items.length) || 0);
     }, 0);
@@ -257,7 +258,8 @@
       return leftPriority - rightPriority;
     });
 
-    filterButtons = [{ key: "all", label: "All" }].concat(categoryFilters);
+    filterButtons = [{ key: "all", label: "All types" }].concat(categoryFilters);
+    var subjectButtons = [{ key: "all", label: "All areas" }].concat(subjects);
     var publicationSections = categories.map(function (category, categoryIndex) {
       var categoryKey = category.key || "category-" + categoryIndex;
 
@@ -283,7 +285,7 @@
               }
 
               return (
-                '<li class="publication" data-publication-item data-publication-kind="' + escapeHtml(categoryKey) + '">' +
+                '<li class="publication" data-publication-item data-publication-kind="' + escapeHtml(categoryKey) + '" data-publication-subject="' + escapeHtml(item.subject || "") + '">' +
                   '<div class="publication__year">' + escapeHtml(item.year) + "</div>" +
                   '<div class="publication__body">' +
                     '<h3 class="publication__title">' + escapeHtml(item.title) + "</h3>" +
@@ -318,12 +320,24 @@
           "</div>" +
         "</div>" +
         '<div class="publication-filter">' +
-          '<span class="publication-tools__label" id="publication-filter-label">Show</span>' +
-          '<div class="publication-filter__buttons" role="group" aria-labelledby="publication-filter-label">' +
+          '<span class="publication-tools__label" id="publication-type-filter-label">Publication type</span>' +
+          '<div class="publication-filter__buttons" role="group" aria-labelledby="publication-type-filter-label">' +
             filterButtons.map(function (filter, index) {
               return (
-                '<button class="publication-filter__button" type="button" data-publication-filter="' + escapeHtml(filter.key) + '" aria-pressed="' + (index === 0 ? "true" : "false") + '" aria-controls="publication-groups">' +
+                '<button class="publication-filter__button" type="button" data-publication-type-filter="' + escapeHtml(filter.key) + '" aria-pressed="' + (index === 0 ? "true" : "false") + '" aria-controls="publication-groups">' +
                   escapeHtml(filter.label) +
+                "</button>"
+              );
+            }).join("") +
+          "</div>" +
+        "</div>" +
+        '<div class="publication-filter publication-filter--subject">' +
+          '<span class="publication-tools__label" id="publication-subject-filter-label">Research area</span>' +
+          '<div class="publication-filter__buttons" role="group" aria-labelledby="publication-subject-filter-label">' +
+            subjectButtons.map(function (subject, index) {
+              return (
+                '<button class="publication-filter__button" type="button" data-publication-subject-filter="' + escapeHtml(subject.key) + '" aria-pressed="' + (index === 0 ? "true" : "false") + '" aria-controls="publication-groups">' +
+                  escapeHtml(subject.label) +
                 "</button>"
               );
             }).join("") +
@@ -337,7 +351,7 @@
       '<div id="publication-groups">' + publicationSections + "</div>" +
       '<section class="publication-empty" data-publication-empty hidden>' +
         '<h2 class="publication-empty__title">No matching publications</h2>' +
-        '<p>Try another title, author, venue, arXiv ID, or publication type.</p>' +
+        '<p>Try another title, author, venue, arXiv ID, publication type, or research area.</p>' +
         '<button class="publication-clear" type="button" data-publication-clear>Clear search and filters</button>' +
       "</section>";
   }
@@ -351,10 +365,12 @@
     var resultCount = document.getElementById("publication-results");
     var items = Array.prototype.slice.call(document.querySelectorAll("[data-publication-item]"));
     var groups = Array.prototype.slice.call(document.querySelectorAll("[data-publication-group]"));
-    var filterButtons = Array.prototype.slice.call(document.querySelectorAll("[data-publication-filter]"));
+    var typeFilterButtons = Array.prototype.slice.call(document.querySelectorAll("[data-publication-type-filter]"));
+    var subjectFilterButtons = Array.prototype.slice.call(document.querySelectorAll("[data-publication-subject-filter]"));
     var emptyState = document.querySelector("[data-publication-empty]");
     var clearButton = document.querySelector("[data-publication-clear]");
-    var activeFilter = "all";
+    var activeTypeFilter = "all";
+    var activeSubjectFilter = "all";
 
     if (!searchInput || !resultCount || !items.length) {
       return;
@@ -379,9 +395,10 @@
       var visibleCount = 0;
 
       items.forEach(function (item) {
-        var matchesType = activeFilter === "all" || item.getAttribute("data-publication-kind") === activeFilter;
+        var matchesType = activeTypeFilter === "all" || item.getAttribute("data-publication-kind") === activeTypeFilter;
+        var matchesSubject = activeSubjectFilter === "all" || item.getAttribute("data-publication-subject") === activeSubjectFilter;
         var matchesQuery = !query || item._publicationSearchText.indexOf(query) !== -1;
-        var isVisible = matchesType && matchesQuery;
+        var isVisible = matchesType && matchesSubject && matchesQuery;
 
         item.hidden = !isVisible;
 
@@ -397,8 +414,12 @@
         });
       });
 
-      filterButtons.forEach(function (button) {
-        button.setAttribute("aria-pressed", button.getAttribute("data-publication-filter") === activeFilter ? "true" : "false");
+      typeFilterButtons.forEach(function (button) {
+        button.setAttribute("aria-pressed", button.getAttribute("data-publication-type-filter") === activeTypeFilter ? "true" : "false");
+      });
+
+      subjectFilterButtons.forEach(function (button) {
+        button.setAttribute("aria-pressed", button.getAttribute("data-publication-subject-filter") === activeSubjectFilter ? "true" : "false");
       });
 
       resultCount.textContent = "Showing " + visibleCount + (visibleCount === 1 ? " publication" : " publications");
@@ -410,16 +431,24 @@
 
     searchInput.addEventListener("input", updatePublications);
 
-    filterButtons.forEach(function (button) {
+    typeFilterButtons.forEach(function (button) {
       button.addEventListener("click", function () {
-        activeFilter = button.getAttribute("data-publication-filter") || "all";
+        activeTypeFilter = button.getAttribute("data-publication-type-filter") || "all";
+        updatePublications();
+      });
+    });
+
+    subjectFilterButtons.forEach(function (button) {
+      button.addEventListener("click", function () {
+        activeSubjectFilter = button.getAttribute("data-publication-subject-filter") || "all";
         updatePublications();
       });
     });
 
     if (clearButton) {
       clearButton.addEventListener("click", function () {
-        activeFilter = "all";
+        activeTypeFilter = "all";
+        activeSubjectFilter = "all";
         searchInput.value = "";
         updatePublications();
         searchInput.focus();

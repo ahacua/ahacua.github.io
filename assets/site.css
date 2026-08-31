@@ -368,6 +368,10 @@ img {
   gap: 0.45rem;
 }
 
+.publication-filter--subject {
+  grid-column: 1 / -1;
+}
+
 .publication-filter__button,
 .publication-clear {
   min-height: 2.35rem;
