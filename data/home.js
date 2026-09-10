@@ -1,17 +1,16 @@
 window.sitePageData = {
   hero: {
-    eyebrow: "Home",
+    eyebrow: "Functional analysis · Banach spaces",
     title: "Antonio Acuaviva",
     meta: "PhD Candidate in Mathematics | Lancaster University",
     image: "/assets/hero.jpeg",
     imageAlt: "Sunset over the sea",
     summary:
-      "I am a PhD candidate in Mathematics at Lancaster University, working in Functional Analysis with a focus on Banach spaces and operator theory."
+      "I am a PhD candidate at Lancaster University working on Banach spaces and operator theory, with particular interests in primarity, operator factorisation, and C(K)-spaces."
   },
 about: [
-  "My research interests lie in Functional Analysis, with a particular focus on Banach space theory and operator theory. I am especially interested in the structural and geometric properties of infinite-dimensional spaces, as well as in phenomena related to primarity, factorisation of operators, and spaces with few operators.",
-  "I am currently a PhD student at Lancaster University, where I work under the supervision of Professor Niels Jakob Laustsen. My research explores questions at the intersection of Banach space geometry and operator theory, often combining classical techniques with more recent developments in the area.", 
-  "Prior to this, I completed the Part III (MASt) in Mathematics at the University of Cambridge, supported by a La Caixa fellowship, and obtained a dual degree in Mathematics and Physics from Universidad Complutense de Madrid. During my undergraduate studies, I spent a year abroad at the University of California, Berkeley, supported by a UCM–University of California Scholarship."
+  "My research concerns structural and geometric questions in infinite-dimensional Banach spaces, including complemented subspaces, operator ideals, Calkin algebras, and spaces with few operators. I work under the supervision of Professor Niels Jakob Laustsen.",
+  "Before Lancaster, I completed Part III (MASt) in Mathematics at the University of Cambridge as a La Caixa fellow. I also hold a degree in Mathematics and a degree in Physics from Universidad Complutense de Madrid. During my studies there, I spent a year at the University of California, Berkeley, supported by a UCM–University of California Scholarship."
 ],
   links: [
     {

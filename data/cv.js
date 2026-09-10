@@ -5,7 +5,7 @@ window.sitePageData = {
     institution: "Lancaster University",
     location: "Lancaster, UK",
     summary: "Research interests: Banach space theory and operator theory, especially complemented subspaces and primariness, C(K)-spaces, operator ideals and Calkin algebras, and nonlinear Banach space theory.",
-    lastUpdated: "August 2026",
+    lastUpdated: "September 2026",
     downloadLabel: "Download PDF",
     downloadHref: "/assets/Antonio-Acuaviva-CV.pdf",
     downloadFilename: "Antonio-Acuaviva-CV.pdf"
@@ -19,10 +19,10 @@ window.sitePageData = {
           title: "PhD in Pure Mathematics",
           organization: "Lancaster University",
           location: "Lancaster, UK",
-          dates: "October 2023 - Present",
+          dates: "October 2023 – Present",
           bullets: [
             "Supervisor: Professor Niels J. Laustsen.",
-            "Awarded the Pure Mathematics Prize for exceptional performance during the first and third years of the PhD program.",
+            "Awarded the Pure Mathematics Prize for exceptional performance during the first and third years of the PhD programme.",
             "Supported by an EPSRC Doctoral Training Partnership Studentship."
           ]
         },
@@ -30,7 +30,7 @@ window.sitePageData = {
           title: "Master of Advanced Study in Mathematics (Part III)",
           organization: "University of Cambridge",
           location: "Cambridge, UK",
-          dates: "October 2022 - June 2023",
+          dates: "October 2022 – June 2023",
           bullets: [
             "Result: Distinction.",
             "Received the 1912 Senior Scholarship and Fitzwilliam College Prize for academic performance.",
@@ -41,7 +41,7 @@ window.sitePageData = {
           title: "Double Degree in Mathematics and Physics",
           organization: "Universidad Complutense de Madrid (UCM)",
           location: "Madrid, Spain",
-          dates: "September 2017 - June 2022",
+          dates: "September 2017 – June 2022",
           bullets: [
             "Overall averages: 9.84/10 in Mathematics (ranked 1st of 171 graduates) and 9.66/10 in Physics (ranked 1st of 247 graduates).",
             "Recipient of the Bachelor's Degree Extraordinary Award in both Mathematics and Physics.",
@@ -56,7 +56,7 @@ window.sitePageData = {
           title: "UCEAP International Student",
           organization: "University of California, Berkeley",
           location: "Berkeley, California, USA",
-          dates: "August 2019 - June 2020",
+          dates: "August 2019 – June 2020",
           bullets: [
             "Selected for a year-long study programme and awarded the UCM-University of California Scholarship, given to the top seven students at Universidad Complutense de Madrid."
           ]
@@ -74,7 +74,7 @@ window.sitePageData = {
               title: "FUSRP: Fields Undergraduate Summer Research Program",
               organization: "Fields Institute for Research in Mathematical Sciences",
               location: "Toronto, Canada",
-              dates: "June 2021 - August 2021",
+              dates: "June 2021 – August 2021",
               bullets: [
                 "Investigated state transfer in quantum walks with Ada Chan, Christino Tamon, and Xiaohong Zhang; the project contributed to the later journal article State Transfer in Chiral Quantum Walks.",
                 {
@@ -89,7 +89,7 @@ window.sitePageData = {
               title: "Introduction to Research Grant Recipient",
               organization: "Institute of Mathematical Sciences (ICMAT)",
               location: "Madrid, Spain",
-              dates: "June - September 2020 and 2021",
+              dates: "June–September 2020 and 2021",
               bullets: [
                 "Received the competitive Severo Ochoa Introduction to Research Grant in two consecutive years and undertook projects in mathematical analysis."
               ]
@@ -103,7 +103,7 @@ window.sitePageData = {
               title: "Graduate Teaching Assistant (GTA)",
               organization: "Lancaster University",
               location: "Lancaster, UK",
-              dates: "October 2023 - December 2025",
+              dates: "October 2023 – December 2025",
               bullets: [
                 "Taught on Numbers and Relations (MATH111), Discrete Mathematics (MATH112), Real Analysis (MATH210), and Complex Analysis (MATH215), including marking, tutoring, and problem classes."
               ]
@@ -113,7 +113,7 @@ window.sitePageData = {
       ]
     },
     {
-      title: "Honors and Awards",
+      title: "Honours and Awards",
       kind: "awards",
       entries: [
         { title: "Pure Mathematics Prize", organization: "Lancaster University", year: "2024 & 2026" },
@@ -125,14 +125,14 @@ window.sitePageData = {
         { title: "Bachelor's Degree Extraordinary Award", organization: "Universidad Complutense de Madrid", note: "Ranked 1st in class.", year: "2022" },
         { title: "Blas Cabrera Summer Scholarship", organization: "Universidad Internacional Menéndez Pelayo and Spanish Ministry of Science and Innovation", year: "2022" },
         { title: "Arturo Duperier Award", organization: "Pedro Bernardo City Council", note: "Physics excellence.", year: "2022" },
-        { title: "Excellence Grants", organization: "Community of Madrid", note: "Awarded in four consecutive years.", year: "2018-2021" }
+        { title: "Excellence Grants", organization: "Community of Madrid", note: "Awarded in four consecutive years.", year: "2018–2021" }
       ],
       additionalEntries: [
         { title: "Department Research Grant", organization: "Department of Mathematical Analysis, UCM", year: "2022" },
         { title: "Becas Atrévete 2020", organization: "McKinsey & Company", year: "2020" },
         { title: "UCM-University of California Scholarship", organization: "Universidad Complutense de Madrid", note: "Top seven students selected.", year: "2019" },
         { title: "Santander Progress Scholarship", organization: "Santander Bank", year: "2019" },
-        { title: "Goñi and Rey Foundation Fellowship", organization: "Full academic funding", year: "2015-2017" }
+        { title: "Goñi and Rey Foundation Fellowship", organization: "Full academic funding", year: "2015–2017" }
       ]
     },
     {

@@ -32,7 +32,7 @@
       return '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1h-6.2l1.9 2H18v1.5H6V19h2.3l1.9-2H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Zm.5 1.5v9h15v-9Z"/></svg>';
     }
 
-    if (normalized.indexOf("pdf") !== -1 || normalized.indexOf("journal") !== -1) {
+    if (normalized.indexOf("pdf") !== -1 || normalized.indexOf("journal") !== -1 || normalized.indexOf("article") !== -1) {
       return '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l5 5v13a1 1 0 0 1-1 1H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Zm6 1.5V9h4.5M9 13h1.4a2.1 2.1 0 1 1 0 4.2H9Zm1.2 1v2.2h.2a1.1 1.1 0 1 0 0-2.2Zm3.3-1h2.9v1h-1.7v.7h1.5v1h-1.5v1.5h-1.2Zm-1.2 0v4.2h-1.2V13Z"/></svg>';
     }
 
@@ -481,47 +481,73 @@
     var body = "";
 
     if (data.items && data.items.length) {
-      body = '<div class="talks">' +
-        data.items.map(function (talk) {
-          var event = escapeHtml(talk.event);
-          var links = "";
+      var talkGroups = [];
 
-          if (talk.eventUrl) {
-            event = '<a href="' + escapeHtml(talk.eventUrl) + '" target="_blank" rel="noreferrer noopener">' + event + "</a>";
-          }
+      data.items.forEach(function (talk) {
+        var yearMatch = String(talk.date || "").match(/\b(20\d{2})\b/);
+        var year = yearMatch ? yearMatch[1] : "Earlier";
+        var group = talkGroups[talkGroups.length - 1];
 
-          if (talk.links && talk.links.length) {
-            links =
-              '<div class="publication__links" aria-label="Talk links">' +
-              talk.links.map(function (link) {
-                var extraAttrs = ' target="_blank" rel="noreferrer noopener"';
+        if (!group || group.year !== year) {
+          group = { year: year, items: [] };
+          talkGroups.push(group);
+        }
 
-                if (link.download) {
-                  extraAttrs = ' download="' + escapeHtml(link.downloadFilename || "") + '"';
+        group.items.push(talk);
+      });
+
+      body = '<div class="talks">' + talkGroups.map(function (group) {
+        var yearId = "talk-year-" + group.year.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+
+        return (
+          '<section class="talk-year" aria-labelledby="' + yearId + '">' +
+            '<h2 class="talk-year__title" id="' + yearId + '"><span>' + escapeHtml(group.year) + '</span></h2>' +
+            '<div class="talk-year__items">' +
+              group.items.map(function (talk) {
+                var event = escapeHtml(talk.event);
+                var links = "";
+                var displayDate = String(talk.date || "").replace(/\s+20\d{2}\s*$/, "");
+
+                if (talk.eventUrl) {
+                  event = '<a href="' + escapeHtml(talk.eventUrl) + '" target="_blank" rel="noreferrer noopener">' + event + "</a>";
+                }
+
+                if (talk.links && talk.links.length) {
+                  links =
+                    '<div class="publication__links" aria-label="Talk links">' +
+                    talk.links.map(function (link) {
+                      var extraAttrs = ' target="_blank" rel="noreferrer noopener"';
+
+                      if (link.download) {
+                        extraAttrs = ' download="' + escapeHtml(link.downloadFilename || "") + '"';
+                      }
+
+                      return (
+                        '<a class="publication__link" href="' + escapeHtml(link.url) + '"' + extraAttrs + ">" +
+                          '<span class="publication__link-icon">' + getLinkIcon(link.label) + "</span>" +
+                          '<span class="publication__link-label">' + escapeHtml(link.label) + "</span>" +
+                        "</a>"
+                      );
+                    }).join("") +
+                    "</div>";
                 }
 
                 return (
-                  '<a class="publication__link" href="' + escapeHtml(link.url) + '"' + extraAttrs + ">" +
-                    '<span class="publication__link-icon">' + getLinkIcon(link.label) + "</span>" +
-                    '<span class="publication__link-label">' + escapeHtml(link.label) + "</span>" +
-                  "</a>"
+                  '<article class="talk">' +
+                    (displayDate ? '<p class="talk__date">' + escapeHtml(displayDate) + "</p>" : "") +
+                    '<div class="talk__body">' +
+                      '<h3 class="talk__title">' + escapeHtml(talk.title) + "</h3>" +
+                      '<p class="talk__event">' + event + "</p>" +
+                      (talk.location ? '<p class="talk__location">' + escapeHtml(talk.location) + "</p>" : "") +
+                      links +
+                    "</div>" +
+                  "</article>"
                 );
               }).join("") +
-              "</div>";
-          }
-
-          return (
-            '<article class="talk">' +
-              '<h2 class="talk__title">' + escapeHtml(talk.title) + "</h2>" +
-              '<p class="talk__detail">' + event + "</p>" +
-              (talk.location ? '<p class="talk__detail">' + escapeHtml(talk.location) + "</p>" : "") +
-              (talk.date ? '<p class="talk__detail">' + escapeHtml(talk.date) + "</p>" : "") +
-              (talk.note ? '<p class="talk__detail">' + escapeHtml(talk.note) + "</p>" : "") +
-              links +
-            "</article>"
-          );
-        }).join("") +
-      "</div>";
+            "</div>" +
+          "</section>"
+        );
+      }).join("") + "</div>";
     } else {
       body = '<p class="talks-empty">' + escapeHtml(data.empty_message || "No talks have been added yet.") + "</p>";
     }

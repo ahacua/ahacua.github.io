@@ -226,6 +226,15 @@ assert(uniformPaper?.authors === "A. Acuaviva and P. Acuaviva", "Uniform primary
 const rigidityPaper = publications.find((item) => item.title === "Curved RUM spectra of periodic frameworks");
 assert(rigidityPaper?.status === "Submitted", "Rigidity paper must be marked Submitted");
 
+const unconditionalBasesPaper = publications.find((item) => item.title === "A negative solution to the complemented subspace problem for Banach spaces with unconditional bases");
+assert(unconditionalBasesPaper?.links?.some((link) => link.url === "https://arxiv.org/abs/2609.08921"), "Latest unconditional-bases preprint is missing its arXiv link");
+
+research.categories.forEach((category) => {
+  const years = category.items.map((item) => Number(item.year));
+  assert(years.every((year, index) => index === 0 || year <= years[index - 1]), `${category.title} must be in reverse chronological order`);
+});
+assert(!publications.some((publication) => (publication.links || []).some((link) => link.label === "Journal version")), "Published-paper links must use the concise Article label");
+
 assert(!read("data/cv.js").includes("2408.10152"), "Web CV must not link the superseded robotics arXiv version");
 assert(!["data/home.js", "data/cv.js", "data/research.js", "data/talks.js"].some((file) => read(file).includes("http://")), "Site data must not contain insecure HTTP links");
 assert(/^(?:January|February|March|April|May|June|July|August|September|October|November|December) 20\d{2}$/.test(cv.profile.lastUpdated), "Web CV needs a month-and-year update date");
@@ -235,6 +244,7 @@ assert(!read("data/cv.js").includes("JRF") && !read("data/cv.js").includes("Trin
 const yfaw2026 = talks.items.find((talk) => talk.event === "Young Functional Analysts' Workshop 2026");
 assert(yfaw2026?.eventUrl === "https://sites.google.com/site/yfawuk/yfaw-2026-in-cardiff", "YFAW 2026 must link to the Cardiff event page");
 talks.items.forEach((talk) => {
+  assert(!talk.note, `Talk ${talk.title} has a redundant talk-type note`);
   (talk.links || []).forEach((link) => {
     assert(!/journal|article|arxiv|preprint|paper|publication/i.test(link.label), `Talk ${talk.title} must not link to an article or preprint`);
   });
@@ -242,6 +252,7 @@ talks.items.forEach((talk) => {
 
 assert(!home.actions && !home.featuredPublications, "Homepage must not contain the declined CTA or selected-publications additions");
 assert(!(home.links || []).some((link) => /lancaster/i.test(`${link.label} ${link.href}`)), "Homepage must not add a Lancaster profile link");
+assert(!read("data/home.js").includes("dual degree"), "Homepage biography must describe the Mathematics and Physics degrees separately");
 
 canonicalPages.forEach((relativePath) => {
   const html = read(relativePath);
@@ -249,6 +260,10 @@ canonicalPages.forEach((relativePath) => {
 
   assert(html.includes('<a class="skip-link" href="#main-content">Skip to main content</a>'), `${relativePath} is missing its skip link`);
   assert(html.includes('<main id="main-content" class="page-shell" tabindex="-1">'), `${relativePath} is missing its main-content target`);
+  assert(html.includes('<footer class="site-footer">'), `${relativePath} is missing its footer`);
+  assert(html.includes('data-theme-toggle'), `${relativePath} is missing its theme toggle`);
+  assert(/<script[^>]+src="\/assets\/theme\.js\?v=[0-9a-f]{12}"/.test(html), `${relativePath} is missing the versioned theme script`);
+  assert(html.indexOf('antonio-acuaviva-theme') < html.indexOf('/assets/site.css'), `${relativePath} must initialise the theme before loading CSS`);
   assert(!/<script[^>]+src="\/data\//.test(html), `${relativePath} loads build data at runtime`);
   assetReferences.forEach((reference) => {
     assert(/\?v=[0-9a-f]{12}$/.test(reference), `${relativePath} has an unversioned asset: ${reference}`);
@@ -265,6 +280,7 @@ assert(/<script[^>]+src="\/assets\/site\.js\?v=[0-9a-f]{12}"/.test(read("researc
 
 const researchHtml = read("research/index.html");
 assert(countMatches(researchHtml, /data-publication-item(?:\s|>)/g) === publications.length, "Static publication count does not match the data");
+assert(!/publication__authors[^>]*>[^<]*<strong/.test(researchHtml), "Publication author names must use equal visual weight");
 assert(/class="publication-tools"[^>]*\shidden(?:\s|>)/.test(researchHtml), "Publication controls must stay hidden until JavaScript enhances them");
 research.subjects.forEach((subject) => {
   assert(researchHtml.includes(`data-publication-subject-filter="${subject.key}"`), `Missing subject filter ${subject.key}`);
@@ -273,7 +289,8 @@ testPublicationExplorer(research);
 
 const talksHtml = read("talks/index.html");
 assert(countMatches(talksHtml, /<article class="talk">/g) === talks.items.length, "Static talk count does not match the data");
-assert(!talksHtml.includes('<h3 class="talk__title">'), "Talk titles must not skip from h1 to h3");
+assert(countMatches(talksHtml, /<section class="talk-year"/g) === new Set(talks.items.map((talk) => String(talk.date).match(/\b20\d{2}\b/)?.[0] || "Earlier")).size, "Talk year groups do not match the data");
+assert(talksHtml.includes('<h3 class="talk__title">'), "Talk titles must sit below their year headings");
 
 const cvHtml = read("cv/index.html");
 assert(cvHtml.includes("Research interests:"), "Research interests must appear near the top of the web CV");
@@ -285,6 +302,11 @@ const css = read("assets/site.css");
 assert(/\[hidden\]\s*\{\s*display:\s*none\s*!important;/.test(css), "CSS must enforce native hidden semantics");
 assert(css.includes(".skip-link"), "CSS is missing skip-link styling");
 assert(css.includes(":focus-visible"), "CSS is missing keyboard focus styling");
+assert(css.includes(':root[data-theme="dark"]'), "CSS is missing its dark palette");
+
+const themeScript = read("assets/theme.js");
+assert(themeScript.includes("localStorage") && themeScript.includes("prefers-color-scheme: dark"), "Theme script must persist choices and honour the system preference");
+assert(read("assets/favicon.svg").includes("AA monogram"), "The AA monogram favicon must be preserved");
 
 const sitemap = read("sitemap.xml");
 ["/", "/cv/", "/research/", "/talks/"].forEach((route) => {
