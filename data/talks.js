@@ -23,13 +23,7 @@ window.sitePageData = {
       eventUrl: "https://banach.im.uj.edu.pl/",
       location: "Institute of Mathematics, Jagiellonian University, Kraków, Poland",
       date: "20 May 2026",
-      note: "Seminar talk.",
-      links: [
-        {
-          label: "Journal version",
-          url: "https://www.cambridge.org/core/journals/forum-of-mathematics-sigma/article/class-of-banach-lattices-is-not-primary/A867D4391DB6627FDE91B5920D0553CF"
-        }
-      ]
+      note: "Seminar talk."
     },
 
     {
@@ -47,13 +41,7 @@ window.sitePageData = {
       eventUrl: "https://www.mimuw.edu.pl/pl/seminaria/referat/c-k-spaces-with-few-operators-relative-to-posets/",
       location: "Room 4050, Faculty of Mathematics, Informatics and Mechanics, University of Warsaw, ul. Banacha 2, Warsaw, Poland",
       date: "13 May 2026",
-      note: "Seminar talk.",
-      links: [
-        {
-          label: "arXiv",
-          url: "https://arxiv.org/abs/2511.22339"
-        }
-      ]
+      note: "Seminar talk."
     },
 
     {
@@ -62,13 +50,7 @@ window.sitePageData = {
       eventUrl: "https://www.impan.pl/~biuletyn/st-q5c0.html",
       location: "Room 6, Institute of Mathematics of the Polish Academy of Sciences (IMPAN), ul. Śniadeckich 8, Warsaw, Poland",
       date: "12 May 2026",
-      note: "Seminar talk.",
-      links: [
-        {
-          label: "Journal version",
-          url: "https://www.cambridge.org/core/journals/forum-of-mathematics-sigma/article/class-of-banach-lattices-is-not-primary/A867D4391DB6627FDE91B5920D0553CF"
-        }
-      ]
+      note: "Seminar talk."
     },
 
     {

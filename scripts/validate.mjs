@@ -234,6 +234,11 @@ assert(!read("data/cv.js").includes("JRF") && !read("data/cv.js").includes("Trin
 
 const yfaw2026 = talks.items.find((talk) => talk.event === "Young Functional Analysts' Workshop 2026");
 assert(yfaw2026?.eventUrl === "https://sites.google.com/site/yfawuk/yfaw-2026-in-cardiff", "YFAW 2026 must link to the Cardiff event page");
+talks.items.forEach((talk) => {
+  (talk.links || []).forEach((link) => {
+    assert(!/journal|article|arxiv|preprint|paper|publication/i.test(link.label), `Talk ${talk.title} must not link to an article or preprint`);
+  });
+});
 
 assert(!home.actions && !home.featuredPublications, "Homepage must not contain the declined CTA or selected-publications additions");
 assert(!(home.links || []).some((link) => /lancaster/i.test(`${link.label} ${link.href}`)), "Homepage must not add a Lancaster profile link");
