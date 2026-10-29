@@ -1,0 +1,2 @@
+# Keep asset hashes and generated HTML identical on Windows and Linux.
+* text=auto eol=lf
