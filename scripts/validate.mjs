@@ -289,9 +289,12 @@ research.subjects.forEach((subject) => {
 testPublicationExplorer(research);
 
 const talksHtml = read("talks/index.html");
+assert(talks.categories.map((category) => category.key).join(",") === "invited,other", "Invited talks must be presented before conference and other talks");
+assert(talks.items.every((talk) => talks.categories.some((category) => category.key === talk.category)), "Every talk must have an explicit category");
 assert(countMatches(talksHtml, /<article class="talk">/g) === talks.items.length, "Static talk count does not match the data");
-assert(countMatches(talksHtml, /<section class="talk-year"/g) === new Set(talks.items.map((talk) => String(talk.date).match(/\b20\d{2}\b/)?.[0] || "Earlier")).size, "Talk year groups do not match the data");
-assert(talksHtml.includes('<h3 class="talk__title">'), "Talk titles must sit below their year headings");
+assert(countMatches(talksHtml, /<section class="talk-year"/g) === new Set(talks.items.map((talk) => `${talk.category}-${String(talk.date).match(/\b20\d{2}\b/)?.[0] || "Earlier"}`)).size, "Talk year groups do not match their categories");
+assert(talksHtml.indexOf('id="talk-category-invited"') >= 0 && talksHtml.indexOf('id="talk-category-invited"') < talksHtml.indexOf('id="talk-category-other"'), "Invited talks must appear first in the generated page");
+assert(talksHtml.includes('<h4 class="talk__title">'), "Talk titles must sit below their category and year headings");
 
 const cvHtml = read("cv/index.html");
 assert(cvHtml.includes("Research interests:"), "Research interests must appear near the top of the web CV");

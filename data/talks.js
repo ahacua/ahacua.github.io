@@ -1,8 +1,13 @@
 window.sitePageData = {
   intro: "",
   empty_message: "No talks have been added yet.",
+  categories: [
+    { key: "invited", title: "Invited talks" },
+    { key: "other", title: "Conference & other talks" }
+  ],
   items: [
     {
+      category: "invited",
       title: "Complemented subspaces of L₁",
       event: "Banach and Metric Space Geometry Seminar",
       location: "Texas A&M University · Online",
@@ -17,6 +22,7 @@ window.sitePageData = {
       ]
     },
     {
+      category: "other",
       title: "Quantitative (Non-)Weak Compactness of Operators on L₁- and C(K)-Spaces",
       event: "Brazilian Workshop on Banach Spaces (BWB 2026)",
       eventUrl: "https://sites.google.com/view/bwb2026/program?authuser=0",
@@ -31,6 +37,7 @@ window.sitePageData = {
     },
 
     {
+      category: "invited",
       title: "The class of Banach lattices is not primary",
       event: "Seminar on Geometry of Banach Spaces",
       eventUrl: "https://banach.im.uj.edu.pl/",
@@ -39,6 +46,7 @@ window.sitePageData = {
     },
 
     {
+      category: "invited",
       title: "Banach space constructions from almost disjoint families",
       event: "Working Group in Applications of Set Theory",
       eventUrl: "https://piotrkoszmider.github.io/seminar/",
@@ -47,6 +55,7 @@ window.sitePageData = {
     },
 
     {
+      category: "invited",
       title: "C(K)-spaces with few operators relative to posets",
       event: "Topology and Set Theory Seminar",
       eventUrl: "https://www.mimuw.edu.pl/pl/seminaria/referat/c-k-spaces-with-few-operators-relative-to-posets/",
@@ -55,6 +64,7 @@ window.sitePageData = {
     },
 
     {
+      category: "invited",
       title: "The class of Banach lattices is not primary",
       event: "Functional Analysis Seminar",
       eventUrl: "https://www.impan.pl/~biuletyn/st-q5c0.html",
@@ -63,6 +73,7 @@ window.sitePageData = {
     },
 
     {
+      category: "other",
       title: "The class of Banach lattices is not primary",
       event: "Young Functional Analysts' Workshop 2026",
       eventUrl: "https://sites.google.com/site/yfawuk/yfaw-2026-in-cardiff",
@@ -79,6 +90,7 @@ window.sitePageData = {
     },
 
     {
+      category: "other",
       title: "Factorizations and norms on Calkin algebras of C(K)-spaces",
       event: "Young Functional Analysts' Workshop 2025",
       eventUrl: "https://sites.google.com/view/yfaw2025/home",
@@ -95,6 +107,7 @@ window.sitePageData = {
     },
 
     {
+      category: "other",
       title: "Factorizations and norms on Calkin algebras of C(K)-spaces",
       event: "Banach Algebras and Operator Algebras",
       eventUrl: "https://sites.google.com/view/baoa2024/home",
@@ -111,6 +124,7 @@ window.sitePageData = {
     },
 
     {
+      category: "other",
       title: "Factorizations and norms on Calkin algebras of C(K)-spaces",
       event: "BAFALASA",
       location: "Lancaster University, Lancaster, UK",

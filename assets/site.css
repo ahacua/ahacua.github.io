@@ -873,6 +873,12 @@ img {
   border-top: 1px solid var(--border);
 }
 
+.talk-category + .talk-category {
+  margin-top: 3.5rem;
+  padding-top: 2.5rem;
+  border-top: 1px solid var(--border);
+}
+
 .talk-year + .talk-year {
   margin-top: 2.4rem;
 }

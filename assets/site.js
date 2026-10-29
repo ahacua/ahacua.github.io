@@ -481,73 +481,79 @@
     var body = "";
 
     if (data.items && data.items.length) {
-      var talkGroups = [];
+      body = data.categories.map(function (category) {
+        var categoryItems = data.items.filter(function (talk) { return talk.category === category.key; });
+        if (!categoryItems.length) { return ""; }
+        var talkGroups = [];
 
-      data.items.forEach(function (talk) {
-        var yearMatch = String(talk.date || "").match(/\b(20\d{2})\b/);
-        var year = yearMatch ? yearMatch[1] : "Earlier";
-        var group = talkGroups[talkGroups.length - 1];
+        categoryItems.forEach(function (talk) {
+          var yearMatch = String(talk.date || "").match(/\b(20\d{2})\b/);
+          var year = yearMatch ? yearMatch[1] : "Earlier";
+          var group = talkGroups[talkGroups.length - 1];
 
-        if (!group || group.year !== year) {
-          group = { year: year, items: [] };
-          talkGroups.push(group);
-        }
+          if (!group || group.year !== year) {
+            group = { year: year, items: [] };
+            talkGroups.push(group);
+          }
 
-        group.items.push(talk);
-      });
+          group.items.push(talk);
+        });
 
-      body = '<div class="talks">' + talkGroups.map(function (group) {
-        var yearId = "talk-year-" + group.year.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+        return '<section class="talk-category" data-talk-category="' + escapeHtml(category.key) + '" aria-labelledby="talk-category-' + escapeHtml(category.key) + '">' +
+          '<h2 class="section-title" id="talk-category-' + escapeHtml(category.key) + '">' + escapeHtml(category.title) + '</h2>' +
+          '<div class="talks">' + talkGroups.map(function (group) {
+          var yearId = "talk-year-" + category.key + "-" + group.year.toLowerCase().replace(/[^a-z0-9]+/g, "-");
 
-        return (
-          '<section class="talk-year" aria-labelledby="' + yearId + '">' +
-            '<h2 class="talk-year__title" id="' + yearId + '"><span>' + escapeHtml(group.year) + '</span></h2>' +
-            '<div class="talk-year__items">' +
-              group.items.map(function (talk) {
-                var event = escapeHtml(talk.event);
-                var links = "";
-                var displayDate = String(talk.date || "").replace(/\s+20\d{2}\s*$/, "");
+          return (
+            '<section class="talk-year" aria-labelledby="' + yearId + '">' +
+              '<h3 class="talk-year__title" id="' + yearId + '"><span>' + escapeHtml(group.year) + '</span></h3>' +
+              '<div class="talk-year__items">' +
+                group.items.map(function (talk) {
+                  var event = escapeHtml(talk.event);
+                  var links = "";
+                  var displayDate = String(talk.date || "").replace(/\s+20\d{2}\s*$/, "");
 
-                if (talk.eventUrl) {
-                  event = '<a href="' + escapeHtml(talk.eventUrl) + '" target="_blank" rel="noreferrer noopener">' + event + "</a>";
-                }
+                  if (talk.eventUrl) {
+                    event = '<a href="' + escapeHtml(talk.eventUrl) + '" target="_blank" rel="noreferrer noopener">' + event + "</a>";
+                  }
 
-                if (talk.links && talk.links.length) {
-                  links =
-                    '<div class="publication__links" aria-label="Talk links">' +
-                    talk.links.map(function (link) {
-                      var extraAttrs = ' target="_blank" rel="noreferrer noopener"';
+                  if (talk.links && talk.links.length) {
+                    links =
+                      '<div class="publication__links" aria-label="Talk links">' +
+                      talk.links.map(function (link) {
+                        var extraAttrs = ' target="_blank" rel="noreferrer noopener"';
 
-                      if (link.download) {
-                        extraAttrs = ' download="' + escapeHtml(link.downloadFilename || "") + '"';
-                      }
+                        if (link.download) {
+                          extraAttrs = ' download="' + escapeHtml(link.downloadFilename || "") + '"';
+                        }
 
-                      return (
-                        '<a class="publication__link" href="' + escapeHtml(link.url) + '"' + extraAttrs + ">" +
-                          '<span class="publication__link-icon">' + getLinkIcon(link.label) + "</span>" +
-                          '<span class="publication__link-label">' + escapeHtml(link.label) + "</span>" +
-                        "</a>"
-                      );
-                    }).join("") +
-                    "</div>";
-                }
+                        return (
+                          '<a class="publication__link" href="' + escapeHtml(link.url) + '"' + extraAttrs + ">" +
+                            '<span class="publication__link-icon">' + getLinkIcon(link.label) + "</span>" +
+                            '<span class="publication__link-label">' + escapeHtml(link.label) + "</span>" +
+                          "</a>"
+                        );
+                      }).join("") +
+                      "</div>";
+                  }
 
-                return (
-                  '<article class="talk">' +
-                    (displayDate ? '<p class="talk__date">' + escapeHtml(displayDate) + "</p>" : "") +
-                    '<div class="talk__body">' +
-                      '<h3 class="talk__title">' + escapeHtml(talk.title) + "</h3>" +
-                      '<p class="talk__event">' + event + "</p>" +
-                      (talk.location ? '<p class="talk__location">' + escapeHtml(talk.location) + "</p>" : "") +
-                      links +
-                    "</div>" +
-                  "</article>"
-                );
-              }).join("") +
-            "</div>" +
-          "</section>"
-        );
-      }).join("") + "</div>";
+                  return (
+                    '<article class="talk">' +
+                      (displayDate ? '<p class="talk__date">' + escapeHtml(displayDate) + "</p>" : "") +
+                      '<div class="talk__body">' +
+                        '<h4 class="talk__title">' + escapeHtml(talk.title) + "</h4>" +
+                        '<p class="talk__event">' + event + "</p>" +
+                        (talk.location ? '<p class="talk__location">' + escapeHtml(talk.location) + "</p>" : "") +
+                        links +
+                      "</div>" +
+                    "</article>"
+                  );
+                }).join("") +
+              "</div>" +
+            "</section>"
+          );
+        }).join("") + "</div></section>";
+      }).join("");
     } else {
       body = '<p class="talks-empty">' + escapeHtml(data.empty_message || "No talks have been added yet.") + "</p>";
     }
