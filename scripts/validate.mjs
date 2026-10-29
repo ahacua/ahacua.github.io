@@ -153,9 +153,10 @@ function testPublicationExplorer(researchData) {
   ).length;
   assert(visibleCount() === expectedOtherPreprints, "Combined type and subject filters returned the wrong count");
 
+  buttonFor(typeButtons, "data-publication-type-filter", "journals").click();
   searchInput.value = "curved rum";
   searchInput.dispatch("input");
-  assert(visibleCount() === 1 && resultCount.textContent === "Showing 1 publication", "Publication search did not find the rigidity manuscript");
+  assert(visibleCount() === 1 && resultCount.textContent === "Showing 1 publication", "Publication search did not find the rigidity article");
 
   searchInput.value = "no publication should match this";
   searchInput.dispatch("input");
@@ -224,7 +225,7 @@ const uniformPaper = publications.find((item) => item.title === "The uniform pri
 assert(uniformPaper?.authors === "A. Acuaviva and P. Acuaviva", "Uniform primary factorisation paper must list both authors");
 
 const rigidityPaper = publications.find((item) => item.title === "Curved RUM spectra of periodic frameworks");
-assert(rigidityPaper?.status === "Submitted", "Rigidity paper must be marked Submitted");
+assert(rigidityPaper?.kind === "journals" && rigidityPaper?.venue === "Bulletin of the London Mathematical Society", "Rigidity paper must show its published journal venue");
 
 const unconditionalBasesPaper = publications.find((item) => item.title === "A negative solution to the complemented subspace problem for Banach spaces with unconditional bases");
 assert(unconditionalBasesPaper?.links?.some((link) => link.url === "https://arxiv.org/abs/2609.08921"), "Latest unconditional-bases preprint is missing its arXiv link");

@@ -12,10 +12,38 @@ window.sitePageData = {
       title: "Journal Articles",
       items: [
         {
-          authors: "J. Bautista, A. Acuaviva, J. Hinojosa, W. Yao, J. Jimenez, and H. Garcia de Marina",
+          authors: "A. Acuaviva",
+          title: "C(K)-spaces with few operators relative to posets",
+          venue: "Topology and its Applications",
+          details: "article 109987 · Available online 2 October 2026 (journal pre-proof)",
+          year: "2026",
+          subject: "banach-space-theory",
+          links: [
+            {
+              label: "Article",
+              url: "https://doi.org/10.1016/j.topol.2026.109987"
+            }
+          ]
+        },
+        {
+          authors: "A. Acuaviva, J. Esson, E. Kastis, and B. Schulze",
+          title: "Curved RUM spectra of periodic frameworks",
+          venue: "Bulletin of the London Mathematical Society",
+          details: "vol. 58(10), e70513",
+          year: "2026",
+          subject: "other",
+          links: [
+            {
+              label: "Article",
+              url: "https://doi.org/10.1112/blms.70513"
+            }
+          ]
+        },
+        {
+          authors: "J. Bautista*, A. Acuaviva*, J. Hinojosa, W. Yao, J. Jimenez, and H. Garcia de Marina",
           title: "Fully Distributed and Resilient Source Seeking for Robot Swarms",
           venue: "IEEE Transactions on Automatic Control",
-          details: "pp. 1–16",
+          details: "Early Access, pp. 1–16 · *Equal contribution",
           year: "2026",
           subject: "other",
           links: [
@@ -29,7 +57,7 @@ window.sitePageData = {
           authors: "A. Acuaviva",
           title: "The class of Banach lattices is not primary",
           venue: "Forum of Mathematics, Sigma",
-          details: "vol. 14, e41",
+          details: "vol. 14, e41, pp. 1–18",
           year: "2026",
           subject: "banach-space-theory",
           links: [
@@ -43,7 +71,7 @@ window.sitePageData = {
           authors: "A. Acuaviva and A. B. Nasseri",
           title: "Quantifying (non-)weak compactness of operators on AL- and C(K)-spaces",
           venue: "Proceedings of the Edinburgh Mathematical Society",
-          details: "pp. 1–56",
+          details: "vol. 69(3), pp. 1088–1143",
           year: "2026",
           subject: "banach-space-theory",
           links: [
@@ -57,7 +85,7 @@ window.sitePageData = {
           authors: "A. Acuaviva",
           title: "Complemented subspaces of a C(K)-space constructed by Candido",
           venue: "Journal of Mathematical Analysis and Applications",
-          details: "vol. 556, 130115",
+          details: "vol. 556(1), 130115",
           year: "2026",
           subject: "banach-space-theory",
           links: [
@@ -71,7 +99,7 @@ window.sitePageData = {
           authors: "A. Acuaviva",
           title: "Operators on injective tensor products of separable Banach spaces and spaces with few operators",
           venue: "Journal of Functional Analysis",
-          details: "vol. 290, 111203",
+          details: "vol. 290(1), 111203",
           year: "2026",
           subject: "banach-space-theory",
           links: [
@@ -85,7 +113,7 @@ window.sitePageData = {
           authors: "A. Acuaviva",
           title: "Factorizations and minimality of the Calkin Algebra norm for C(K)-spaces",
           venue: "Journal of the London Mathematical Society",
-          details: "vol. 112, e70321",
+          details: "vol. 112(4), e70321",
           year: "2025",
           subject: "banach-space-theory",
           links: [
@@ -99,7 +127,7 @@ window.sitePageData = {
           authors: "A. Acuaviva, A. Chan, S. Eldridge, C. Godsil, M. How-Chun-Lun, C. Tamon, E. Wright, and X. Zhang",
           title: "State Transfer in Chiral Quantum Walks",
           venue: "Philosophical Transactions A: Mathematical, Physical and Engineering Sciences",
-          details: "vol. 383",
+          details: "vol. 383(2306), 20240420",
           year: "2025",
           subject: "other",
           links: [
@@ -117,7 +145,7 @@ window.sitePageData = {
           authors: "A. Acuaviva and D. Seco",
           title: "Equidistribution of zeros of some polynomials related to cyclic functions",
           venue: "Analysis and Mathematical Physics",
-          details: "vol. 12, 53",
+          details: "vol. 12(2), 53",
           year: "2022",
           subject: "other",
           links: [
@@ -157,6 +185,36 @@ window.sitePageData = {
       items: [
         {
           authors: "A. Acuaviva",
+          title: "A solution to Michael's problem for Fréchet algebras",
+          venue: "arXiv",
+          details: "2609.28584",
+          year: "2026",
+          status: "Preprint",
+          subject: "banach-space-theory",
+          links: [
+            {
+              label: "arXiv",
+              url: "https://arxiv.org/abs/2609.28584"
+            }
+          ]
+        },
+        {
+          authors: "A. Acuaviva",
+          title: "On complemented subspaces of L₁[0, 1]",
+          venue: "arXiv",
+          details: "2609.17283",
+          year: "2026",
+          status: "Preprint",
+          subject: "banach-space-theory",
+          links: [
+            {
+              label: "arXiv",
+              url: "https://arxiv.org/abs/2609.17283"
+            }
+          ]
+        },
+        {
+          authors: "A. Acuaviva",
           title: "A negative solution to the complemented subspace problem for Banach spaces with unconditional bases",
           venue: "arXiv",
           details: "2609.08921",
@@ -188,15 +246,15 @@ window.sitePageData = {
         {
           authors: "A. Acuaviva and P. Acuaviva",
           title: "The uniform primary factorisation property for C(K, E)",
-          venue: "ResearchGate",
-          details: "411984474",
+          venue: "arXiv",
+          details: "2609.18993",
           year: "2026",
           status: "Preprint",
           subject: "banach-space-theory",
           links: [
             {
-              label: "ResearchGate",
-              url: "https://www.researchgate.net/publication/411984474_The_uniform_primary_factorisation_property_for_CK_E"
+              label: "arXiv",
+              url: "https://arxiv.org/abs/2609.18993"
             }
           ]
         },
@@ -229,15 +287,6 @@ window.sitePageData = {
               url: "https://arxiv.org/abs/2607.17388"
             }
           ]
-        },
-        {
-          authors: "A. Acuaviva, J. Esson, E. Kastis, and B. Schulze",
-          title: "Curved RUM spectra of periodic frameworks",
-          venue: "Manuscript",
-          details: "",
-          year: "2026",
-          status: "Submitted",
-          subject: "other"
         },
         {
           authors: "A. Acuaviva and P. Acuaviva",
@@ -326,21 +375,6 @@ window.sitePageData = {
             {
               label: "arXiv",
               url: "https://arxiv.org/abs/2605.21711"
-            }
-          ]
-        },
-        {
-          authors: "A. Acuaviva",
-          title: "C(K)-spaces with few operators relative to posets",
-          venue: "arXiv",
-          details: "2511.22339",
-          year: "2025",
-          status: "Submitted",
-          subject: "banach-space-theory",
-          links: [
-            {
-              label: "arXiv",
-              url: "https://arxiv.org/abs/2511.22339"
             }
           ]
         }

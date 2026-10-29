@@ -1,11 +1,11 @@
 window.sitePageData = {
   profile: {
     name: "Curriculum Vitae",
-    role: "PhD Candidate in Mathematics",
+    role: "Doctoral Researcher in Pure Mathematics",
     institution: "Lancaster University",
     location: "Lancaster, UK",
     summary: "Research interests: Banach space theory and operator theory, especially complemented subspaces and primariness, C(K)-spaces, operator ideals and Calkin algebras, and nonlinear Banach space theory.",
-    lastUpdated: "September 2026",
+    lastUpdated: "October 2026",
     downloadLabel: "Download PDF",
     downloadHref: "/assets/Antonio-Acuaviva-CV.pdf",
     downloadFilename: "Antonio-Acuaviva-CV.pdf"
@@ -21,7 +21,11 @@ window.sitePageData = {
           location: "Lancaster, UK",
           dates: "October 2023 – Present",
           bullets: [
+            "Expected PhD award: late April 2027.",
             "Supervisor: Professor Niels J. Laustsen.",
+            {
+              html: 'Since summer 2026, systematic use of large language models in mathematical research; coauthor of <a href="https://arxiv.org/abs/2607.17388" target="_blank" rel="noreferrer noopener"><em>Mathematical discovery in the wild: AI-guided proofs in Banach space theory</em></a>.'
+            },
             "Awarded the Pure Mathematics Prize for exceptional performance during the first and third years of the PhD programme.",
             "Supported by an EPSRC Doctoral Training Partnership Studentship."
           ]
@@ -34,7 +38,7 @@ window.sitePageData = {
           bullets: [
             "Result: Distinction.",
             "Received the 1912 Senior Scholarship and Fitzwilliam College Prize for academic performance.",
-            "Supported by the prestigious \"la Caixa\" Fellowship."
+            "Supported by the la Caixa Foundation Postgraduate Fellowship Abroad."
           ]
         },
         {
@@ -43,17 +47,17 @@ window.sitePageData = {
           location: "Madrid, Spain",
           dates: "September 2017 – June 2022",
           bullets: [
-            "Overall averages: 9.84/10 in Mathematics (ranked 1st of 171 graduates) and 9.66/10 in Physics (ranked 1st of 247 graduates).",
+            "Ranked 1st of 171 graduates in Mathematics and 1st of 247 graduates in Physics.",
             "Recipient of the Bachelor's Degree Extraordinary Award in both Mathematics and Physics.",
-            "Awarded the Arturo Duperier Prize for outstanding performance in Physics.",
-            "Received the Excellence Grant every academic year.",
+            "Awarded the Arturo Duperier Award for the best academic record in Physics at UCM.",
+            "Received Community of Madrid Excellence Grants in four consecutive years.",
             {
-              html: 'Thesis: <em>Resilient Source Seeking with Robot Swarms</em>. Related journal article: <a href="https://ieeexplore.ieee.org/document/11664370" target="_blank" rel="noreferrer noopener"><em>Fully Distributed and Resilient Source Seeking for Robot Swarms</em></a>.'
+              html: 'Physics thesis: <em>Resilient Source Seeking with Robot Swarms</em>. Related journal article: <a href="https://ieeexplore.ieee.org/document/11664370" target="_blank" rel="noreferrer noopener"><em>Fully Distributed and Resilient Source Seeking for Robot Swarms</em></a>.'
             }
           ]
         },
         {
-          title: "UCEAP International Student",
+          title: "Non-degree Exchange Programme (UCEAP)",
           organization: "University of California, Berkeley",
           location: "Berkeley, California, USA",
           dates: "August 2019 – June 2020",
@@ -71,17 +75,24 @@ window.sitePageData = {
           title: "Research Experience",
           entries: [
             {
+              title: "Iliad Fellowship (forthcoming)",
+              organization: "Iliad",
+              dates: "2 November 2026 – 5 February 2027"
+            },
+            {
+              title: "JSPS Short-Term Pre/Postdoctoral Fellowship for Research in Japan (forthcoming)",
+              organization: "Tokyo University of Science",
+              location: "Tokyo, Japan"
+            },
+            {
               title: "FUSRP: Fields Undergraduate Summer Research Program",
               organization: "Fields Institute for Research in Mathematical Sciences",
               location: "Toronto, Canada",
               dates: "June 2021 – August 2021",
               bullets: [
-                "Investigated state transfer in quantum walks with Ada Chan, Christino Tamon, and Xiaohong Zhang; the project contributed to the later journal article State Transfer in Chiral Quantum Walks.",
+                "Undergraduate researcher investigating state transfer in quantum walks with Ada Chan, Christino Tamon, and Xiaohong Zhang; the project contributed to the later journal article State Transfer in Chiral Quantum Walks.",
                 {
                   html: 'Selected to present research results at <a href="https://cumc.math.ca/2021/students" target="_blank" rel="noreferrer noopener">CUMC Conference 2021</a>: <em>Quantum Walks on Graphs: Perfect State Transfer and Periodicity</em>.'
-                },
-                {
-                  html: 'Results also presented at the <a href="https://www.fields.utoronto.ca/activities/21-22/algebraic" target="_blank" rel="noreferrer noopener">Workshop on Algebraic Graph Theory and Quantum Information</a>: <a href="https://www.fields.utoronto.ca/sites/default/files/uploads/1.jpg" target="_blank" rel="noreferrer noopener"><em>Quantum Walks on Hermitian Graphs</em></a>.'
                 }
               ]
             },
@@ -113,6 +124,16 @@ window.sitePageData = {
       ]
     },
     {
+      title: "Professional Service",
+      kind: "timeline",
+      entries: [
+        {
+          title: "Refereeing",
+          bullets: ["Referee for Studia Mathematica and the Banach Journal of Mathematical Analysis."]
+        }
+      ]
+    },
+    {
       title: "Honours and Awards",
       kind: "awards",
       entries: [
@@ -124,7 +145,7 @@ window.sitePageData = {
         { title: "Postgraduate Fellowship Abroad", organization: "\"la Caixa\" Foundation", year: "2022" },
         { title: "Bachelor's Degree Extraordinary Award", organization: "Universidad Complutense de Madrid", note: "Ranked 1st in class.", year: "2022" },
         { title: "Blas Cabrera Summer Scholarship", organization: "Universidad Internacional Menéndez Pelayo and Spanish Ministry of Science and Innovation", year: "2022" },
-        { title: "Arturo Duperier Award", organization: "Pedro Bernardo City Council", note: "Physics excellence.", year: "2022" },
+        { title: "Arturo Duperier Award", organization: "Pedro Bernardo City Council", note: "Best academic record in Physics at UCM.", year: "2022" },
         { title: "Excellence Grants", organization: "Community of Madrid", note: "Awarded in four consecutive years.", year: "2018–2021" }
       ],
       additionalEntries: [

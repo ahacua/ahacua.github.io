@@ -3,6 +3,20 @@ window.sitePageData = {
   empty_message: "No talks have been added yet.",
   items: [
     {
+      title: "Complemented subspaces of L₁",
+      event: "Banach and Metric Space Geometry Seminar",
+      location: "Texas A&M University · Online",
+      date: "28 October 2026",
+      links: [
+        {
+          label: "Slides",
+          url: "/assets/slides/complemented_subspaces_of_l1_texas_2026.pdf",
+          download: true,
+          downloadFilename: "complemented_subspaces_of_l1_texas_2026.pdf"
+        }
+      ]
+    },
+    {
       title: "Quantitative (Non-)Weak Compactness of Operators on L₁- and C(K)-Spaces",
       event: "Brazilian Workshop on Banach Spaces (BWB 2026)",
       eventUrl: "https://sites.google.com/view/bwb2026/program?authuser=0",
