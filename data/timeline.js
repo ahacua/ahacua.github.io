@@ -87,6 +87,15 @@
         links: [{ label: "Intensive", url: "https://www.iliad.ac/intensive" }, { label: "Programme dates", url: "https://www.iliad.ac/calendar" }]
       },
       {
+        // Participation confirmed by Antonio on 30 October 2026.
+        id: "caltech-mathathon", category: "event", status: "forthcoming",
+        start: "2026-11-13", end: "2026-11-15", date: "13–15 November 2026",
+        title: "Mathathon: Old Problems, New Proofs", organization: "Caltech",
+        location: "Pasadena, California, USA", role: "Participant",
+        details: "On-site round.",
+        links: [{ label: "Official event", url: "https://mathathonchallenge.com/" }]
+      },
+      {
         id: "paris-2026", category: "talk", status: "forthcoming",
         start: "2026-11-19", date: "19 November 2026",
         title: "Séminaire d’Analyse Fonctionnelle", location: "Paris, France",

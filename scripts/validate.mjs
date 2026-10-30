@@ -367,9 +367,11 @@ assert(countMatches(timelineHtml, /data-timeline-item\s/g) === timeline.items.le
 assert(/data-timeline-tools hidden/.test(timelineHtml), "Inert timeline filters must stay hidden without JavaScript");
 assert(/<script[^>]+src="\/assets\/site\.js\?v=[0-9a-f]{12}"/.test(timelineHtml), "Timeline must load its versioned enhancement script");
 assert(timelineHtml.includes('role="status" aria-live="polite"'), "Timeline filter changes need a live announcement");
-assert(!/caltech|mathathon/i.test(timelineHtml), "Undecided participation must stay off the timeline");
+const mathathon = timeline.items.find((item) => item.id === "caltech-mathathon");
+assert(mathathon?.category === "event" && mathathon.role === "Participant" && !mathathon.alsoCategories?.includes("talk"), "Mathathon participation belongs under events rather than talks");
+assert(mathathon?.start === "2026-11-13" && mathathon.end === "2026-11-15" && mathathon.status === "forthcoming", "Mathathon must use its confirmed forthcoming event dates");
 const forthcoming = timeline.items.filter((item) => item.status === "forthcoming");
-assert(forthcoming.length === 6, "Timeline must contain the confirmed programmes, events and invited talks");
+assert(forthcoming.length === 7, "Timeline must contain the confirmed programmes, events and invited talks");
 assert(forthcoming.find((item) => item.id === "royal-society-ai")?.role === "Attendee", "Royal Society attendance must not be presented as a talk");
 assert(forthcoming.find((item) => item.id === "saige-maths-workshop")?.role === "Workshop participant", "SAIGE participation must not be presented as a talk");
 const iliad = forthcoming.find((item) => item.id === "iliad-fellowship");
