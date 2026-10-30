@@ -4,7 +4,7 @@ import vm from "node:vm";
 import { fileURLToPath } from "node:url";
 
 const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const canonicalPages = ["index.html", "cv/index.html", "research/index.html", "talks/index.html"];
+const canonicalPages = ["index.html", "cv/index.html", "research/index.html", "talks/index.html", "timeline/index.html"];
 
 function assert(condition, message) {
   if (!condition) {
@@ -19,6 +19,11 @@ function read(relativePath) {
 function loadData(relativePath) {
   const context = { window: {} };
   vm.createContext(context);
+  if (relativePath === "data/timeline.js") {
+    context.window.siteTimelineSources = Object.fromEntries(
+      ["cv", "talks", "research"].map((name) => [name, loadData(`data/${name}.js`)])
+    );
+  }
   vm.runInContext(read(relativePath), context, { filename: relativePath });
   return context.window.sitePageData;
 }
@@ -199,6 +204,7 @@ const home = loadData("data/home.js");
 const cv = loadData("data/cv.js");
 const research = loadData("data/research.js");
 const talks = loadData("data/talks.js");
+const timeline = loadData("data/timeline.js");
 const publications = research.categories.flatMap((category) =>
   category.items.map((item) => ({ ...item, kind: category.key }))
 );
@@ -237,7 +243,7 @@ research.categories.forEach((category) => {
 assert(!publications.some((publication) => (publication.links || []).some((link) => link.label === "Journal version")), "Published-paper links must use the concise Article label");
 
 assert(!read("data/cv.js").includes("2408.10152"), "Web CV must not link the superseded robotics arXiv version");
-assert(!["data/home.js", "data/cv.js", "data/research.js", "data/talks.js"].some((file) => read(file).includes("http://")), "Site data must not contain insecure HTTP links");
+assert(!["data/home.js", "data/cv.js", "data/research.js", "data/talks.js", "data/timeline.js"].some((file) => read(file).includes("http://")), "Site data must not contain insecure HTTP links");
 assert(/^(?:January|February|March|April|May|June|July|August|September|October|November|December) 20\d{2}$/.test(cv.profile.lastUpdated), "Web CV needs a month-and-year update date");
 assert(!read("data/cv.js").includes("International Baccalaureate"), "Secondary-school details should remain compressed out of the main web CV");
 assert(!read("data/cv.js").includes("JRF") && !read("data/cv.js").includes("Trinity"), "Web CV must not contain JRF application material");
@@ -263,6 +269,7 @@ canonicalPages.forEach((relativePath) => {
   assert(html.includes('<main id="main-content" class="page-shell" tabindex="-1">'), `${relativePath} is missing its main-content target`);
   assert(html.includes('<footer class="site-footer">'), `${relativePath} is missing its footer`);
   assert(html.includes('data-theme-toggle'), `${relativePath} is missing its theme toggle`);
+  assert(/<nav class="site-nav"[\s\S]*?<a href="\/timeline\/"/.test(html), `${relativePath} is missing Timeline in the primary navigation`);
   assert(/<script[^>]+src="\/assets\/theme\.js\?v=[0-9a-f]{12}"/.test(html), `${relativePath} is missing the versioned theme script`);
   assert(html.indexOf('antonio-acuaviva-theme') < html.indexOf('/assets/site.css'), `${relativePath} must initialise the theme before loading CSS`);
   assert(!/<script[^>]+src="\/data\//.test(html), `${relativePath} loads build data at runtime`);
@@ -288,6 +295,98 @@ research.subjects.forEach((subject) => {
 });
 testPublicationExplorer(research);
 
+// Exercise filtering against mixed talk/attendance entries and hidden year groups.
+function testTimelineFilters() {
+  const items = timeline.items.map((item) => new FakeElement({
+    "data-timeline-categories": [item.category, ...(item.alsoCategories || [])].join(" ")
+  }));
+  const groupKeys = [...new Set(timeline.items.map((item) => item.status === "forthcoming" ? "forthcoming" : item.start.slice(0, 4)))];
+  const groups = groupKeys.map((key) => {
+    const group = new FakeElement();
+    group.querySelectorAll = () => items.filter((_, index) =>
+      (timeline.items[index].status === "forthcoming" ? "forthcoming" : timeline.items[index].start.slice(0, 4)) === key
+    );
+    return group;
+  });
+  const buttons = ["all", ...timeline.categories.map((category) => category.key)].map((key) => new FakeElement({
+    "data-timeline-filter": key,
+    "aria-pressed": key === "all" ? "true" : "false"
+  }, key));
+  const tools = new FakeElement();
+  tools.hidden = true;
+  const results = new FakeElement();
+  const select = new FakeElement();
+  select.value = "all";
+  const app = new FakeElement();
+  const document = {
+    body: { dataset: { page: "timeline" } },
+    getElementById(id) { return { app, "timeline-results": results, "timeline-category": select }[id] || null; },
+    querySelector(selector) { return selector === "[data-timeline-tools]" ? tools : null; },
+    querySelectorAll(selector) {
+      return { "[data-timeline-item]": items, "[data-timeline-group]": groups, "[data-timeline-filter]": buttons }[selector] || [];
+    }
+  };
+  const context = { window: {}, document };
+  vm.createContext(context);
+  vm.runInContext(read("assets/site.js"), context);
+  assert(!tools.hidden, "Timeline filters were not progressively enabled");
+  buttons.slice(1).forEach((button) => {
+    button.click();
+    const key = button.getAttribute("data-timeline-filter");
+    const expected = timeline.items.filter((item) => [item.category, ...(item.alsoCategories || [])].includes(key)).length;
+    assert(items.filter((item) => !item.hidden).length === expected, `Wrong timeline filter result for ${key}`);
+    assert(button.getAttribute("aria-pressed") === "true", `Timeline filter ${key} is not announced as active`);
+    assert(buttons.filter((item) => item.getAttribute("aria-pressed") === "true").length === 1, "Only one category should be active");
+    assert(results.textContent.startsWith(`Showing ${expected} `), "Timeline result announcement is incorrect");
+    assert(select.value === key, "Timeline mobile and desktop filters must stay in sync");
+    groups.forEach((group) => assert(group.hidden === group.querySelectorAll().every((item) => item.hidden), "Empty timeline years should be hidden"));
+  });
+  buttons[0].click();
+  assert(items.every((item) => !item.hidden) && groups.every((group) => !group.hidden), "All activities must restore all entries and year groups");
+  assert(results.textContent === `Showing all ${items.length} activities`, "Timeline reset count is incorrect");
+  select.value = "event";
+  select.dispatch("change");
+  assert(buttons.find((button) => button.getAttribute("data-timeline-filter") === "event").getAttribute("aria-pressed") === "true", "Mobile category changes must update the desktop control");
+  assert(items.filter((item) => !item.hidden).length === timeline.items.filter((item) => item.category === "event" || item.alsoCategories?.includes("event")).length, "Mobile conference filter returned the wrong count");
+}
+
+const timelineHtml = read("timeline/index.html");
+const timelineCategories = new Set(timeline.categories.map((category) => category.key));
+assert(new Set(timeline.items.map((item) => item.id)).size === timeline.items.length, "Timeline IDs must be unique");
+timeline.items.forEach((item) => {
+  assert(item.title && item.role && item.date, `Incomplete timeline entry ${item.id}`);
+  assert(/^20\d{2}(?:-\d{2}(?:-\d{2})?)?$/.test(item.start) || (!item.start && item.status === "forthcoming" && item.date === "Dates to be confirmed"), `Invalid timeline date ${item.id}`);
+  assert(!item.end || item.end >= item.start, `Timeline ends before it starts: ${item.id}`);
+  assert([item.category, ...(item.alsoCategories || [])].every((key) => timelineCategories.has(key)), `Unknown timeline category ${item.id}`);
+  if (item.status !== "forthcoming") {
+    assert(item.start <= "2026-10-29", `Future activity must be explicitly forthcoming: ${item.id}`);
+  }
+  assert(timelineHtml.includes(`id="${item.id}"`), `Timeline entry is missing from static HTML: ${item.id}`);
+});
+assert(countMatches(timelineHtml, /data-timeline-item\s/g) === timeline.items.length, "Timeline must include all entries without JavaScript");
+assert(/data-timeline-tools hidden/.test(timelineHtml), "Inert timeline filters must stay hidden without JavaScript");
+assert(/<script[^>]+src="\/assets\/site\.js\?v=[0-9a-f]{12}"/.test(timelineHtml), "Timeline must load its versioned enhancement script");
+assert(timelineHtml.includes('role="status" aria-live="polite"'), "Timeline filter changes need a live announcement");
+assert(!/caltech|mathathon/i.test(timelineHtml), "Undecided participation must stay off the timeline");
+const forthcoming = timeline.items.filter((item) => item.status === "forthcoming");
+assert(forthcoming.length === 6, "Timeline must contain the confirmed programmes, events and invited talks");
+assert(forthcoming.find((item) => item.id === "royal-society-ai")?.role === "Attendee", "Royal Society attendance must not be presented as a talk");
+assert(forthcoming.find((item) => item.id === "saige-maths-workshop")?.role === "Workshop participant", "SAIGE participation must not be presented as a talk");
+const iliad = forthcoming.find((item) => item.id === "iliad-fellowship");
+assert(iliad?.start === "2026-11-02" && iliad.end === "2027-02-05" && !iliad.details, "Iliad must retain confirmed dates without invented duties");
+const intensive = forthcoming.find((item) => item.id === "iliad-intensive");
+assert(intensive?.start === "2026-11-02" && intensive.end === "2026-11-27" && intensive.role === "Participant", "Iliad Intensive must have its own dates and participant role");
+["paris-2026"].forEach((id) => {
+  const talk = forthcoming.find((item) => item.id === id);
+  assert(talk?.category === "talk" && talk.role === "Invited speaker", `Missing forthcoming invited talk: ${id}`);
+});
+const texasTalk = timeline.items.find((item) => item.id === "tamu-2026");
+assert(texasTalk?.status !== "forthcoming" && texasTalk?.role === "Invited speaker" && texasTalk?.links.some((link) => link.label === "Slides"), "The completed Texas talk must include its public slides");
+const newcastle = timeline.items.find((item) => item.id === "yfaw-2024");
+assert(newcastle?.role === "Attendee" && newcastle.category === "event" && !newcastle.presentation, "Newcastle attendance must not imply a presentation");
+assert(timeline.items.find((item) => item.id === "waterloo-2024")?.date === "8–13 July 2024", "Waterloo timeline entry must use verified official event dates");
+testTimelineFilters();
+
 const talksHtml = read("talks/index.html");
 assert(talks.categories.map((category) => category.key).join(",") === "invited,other", "Invited talks must be presented before conference and other talks");
 assert(talks.items.every((talk) => talks.categories.some((category) => category.key === talk.category)), "Every talk must have an explicit category");
@@ -309,12 +408,48 @@ assert(css.includes(":focus-visible"), "CSS is missing keyboard focus styling");
 assert(css.includes(':root[data-theme="dark"]'), "CSS is missing its dark palette");
 
 const themeScript = read("assets/theme.js");
-assert(themeScript.includes("localStorage") && themeScript.includes("prefers-color-scheme: dark"), "Theme script must persist choices and honour the system preference");
+canonicalPages.forEach((relativePath) => {
+  const html = read(relativePath);
+  const bootstrap = html.match(/<script>\s*([\s\S]*?)<\/script>/)?.[1];
+  assert(html.includes('<html lang="en" data-theme="light">'), `${relativePath} must default to light without JavaScript`);
+  [
+    { stored: "", expected: "light" },
+    { stored: "invalid", expected: "light" },
+    { stored: "dark", expected: "dark" },
+    { stored: "light", expected: "light" },
+    { stored: "", expected: "light", blocked: true }
+  ].forEach((scenario) => {
+    let stored = scenario.stored;
+    const root = new FakeElement({ "data-theme": "light" });
+    const button = new FakeElement();
+    const context = {
+      document: { documentElement: root, querySelector: () => button },
+      window: {
+        // A dark device preference must not override the site's day default.
+        matchMedia: () => ({ matches: true }),
+        localStorage: {
+          getItem() { if (scenario.blocked) throw new Error("Storage unavailable"); return stored; },
+          setItem(key, value) { if (scenario.blocked) throw new Error("Storage unavailable"); stored = value; }
+        }
+      }
+    };
+    vm.createContext(context);
+    vm.runInContext(bootstrap, context);
+    vm.runInContext(themeScript, context);
+    assert(root.getAttribute("data-theme") === scenario.expected, `${relativePath} initial theme is incorrect`);
+    const next = scenario.expected === "dark" ? "light" : "dark";
+    assert(button.getAttribute("aria-label") === `Switch to ${next} theme`, `${relativePath} theme toggle label is incorrect`);
+    button.click();
+    assert(root.getAttribute("data-theme") === next, `${relativePath} theme toggle does not work`);
+    vm.runInContext(bootstrap, context);
+    assert(root.getAttribute("data-theme") === (scenario.blocked ? "light" : next), `${relativePath} must remember a manual theme choice when storage is available`);
+  });
+});
 assert(read("assets/favicon.svg").includes("AA monogram"), "The AA monogram favicon must be preserved");
 
 const sitemap = read("sitemap.xml");
-["/", "/cv/", "/research/", "/talks/"].forEach((route) => {
+["/", "/cv/", "/research/", "/talks/", "/timeline/"].forEach((route) => {
   assert(sitemap.includes(`https://ahacua.github.io${route}`), `Sitemap is missing ${route}`);
 });
 
-process.stdout.write(`Validated ${canonicalPages.length} pages, ${publications.length} publications, and ${talks.items.length} talks.\n`);
+process.stdout.write(`Validated ${canonicalPages.length} pages, ${publications.length} publications, ${talks.items.length} talks, and ${timeline.items.length} timeline activities.\n`);

@@ -11,7 +11,8 @@ const pages = [
   { page: "home", html: "index.html", data: "data/home.js" },
   { page: "cv", html: "cv/index.html", data: "data/cv.js" },
   { page: "research", html: "research/index.html", data: "data/research.js" },
-  { page: "talks", html: "talks/index.html", data: "data/talks.js" }
+  { page: "talks", html: "talks/index.html", data: "data/talks.js" },
+  { page: "timeline", html: "timeline/index.html", data: "data/timeline.js" }
 ];
 
 const startMarker = "<!-- static-content:start -->";
@@ -64,6 +65,13 @@ function renderPage(page) {
   };
 
   vm.createContext(context);
+  if (page.page === "timeline") {
+    context.window.siteTimelineSources = {};
+    ["cv", "talks", "research"].forEach((name) => {
+      vm.runInContext(fs.readFileSync(path.join(projectRoot, "data", `${name}.js`), "utf8"), context);
+      context.window.siteTimelineSources[name] = context.window.sitePageData;
+    });
+  }
   vm.runInContext(fs.readFileSync(path.join(projectRoot, page.data), "utf8"), context, {
     filename: page.data
   });

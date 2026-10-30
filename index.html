@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="light">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -18,7 +18,7 @@
           theme = window.localStorage.getItem("antonio-acuaviva-theme") || "";
         } catch (error) {}
         if (theme !== "light" && theme !== "dark") {
-          theme = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+          theme = "light";
         }
         document.documentElement.setAttribute("data-theme", theme);
       })();
@@ -76,6 +76,7 @@
             <a href="/cv/">CV</a>
             <a href="/research/">Publications</a>
             <a href="/talks/">Talks</a>
+            <a href="/timeline/">Timeline</a>
           </nav>
           <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch to dark theme" title="Switch to dark theme">
             <span class="theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M20.5 14.3A8.5 8.5 0 0 1 9.7 3.5a8.5 8.5 0 1 0 10.8 10.8Z"/></svg></span>
@@ -104,6 +105,6 @@
       </div>
     </footer>
 
-    <script src="/assets/theme.js?v=c79e49086105"></script>
+    <script src="/assets/theme.js?v=e8231566baee"></script>
   </body>
 </html>

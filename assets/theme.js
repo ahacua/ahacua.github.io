@@ -2,22 +2,9 @@
   var storageKey = "antonio-acuaviva-theme";
   var button = document.querySelector("[data-theme-toggle]");
   var root = document.documentElement;
-  var preferenceQuery = typeof window.matchMedia === "function" ? window.matchMedia("(prefers-color-scheme: dark)") : null;
 
   if (!button || !root) {
     return;
-  }
-
-  function getStoredTheme() {
-    var storedTheme = "";
-
-    try {
-      storedTheme = window.localStorage.getItem(storageKey) || "";
-    } catch (error) {
-      storedTheme = "";
-    }
-
-    return storedTheme === "light" || storedTheme === "dark" ? storedTheme : "";
   }
 
   function getCurrentTheme() {
@@ -27,7 +14,7 @@
       return currentTheme;
     }
 
-    return preferenceQuery && preferenceQuery.matches ? "dark" : "light";
+    return "light";
   }
 
   function updateButton() {
@@ -51,21 +38,6 @@
 
     updateButton();
   });
-
-  if (preferenceQuery) {
-    var handlePreferenceChange = function (event) {
-      if (!getStoredTheme()) {
-        root.setAttribute("data-theme", event.matches ? "dark" : "light");
-        updateButton();
-      }
-    };
-
-    if (typeof preferenceQuery.addEventListener === "function") {
-      preferenceQuery.addEventListener("change", handlePreferenceChange);
-    } else if (typeof preferenceQuery.addListener === "function") {
-      preferenceQuery.addListener(handlePreferenceChange);
-    }
-  }
 
   updateButton();
   button.setAttribute("data-theme-ready", "");

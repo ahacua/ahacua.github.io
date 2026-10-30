@@ -569,9 +569,118 @@
       "</section>";
   }
 
+  function getTimelineIcon(category) {
+    var paths = {
+      talk: '<path d="M9 5a3 3 0 0 1 6 0v6a3 3 0 0 1-6 0Z"/><path d="M6 10v1a6 6 0 0 0 12 0v-1M12 17v4M9 21h6"/>',
+      event: '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4M17 3v4M3 11h18m-13 5 3 3 5-5"/>',
+      fellowship: '<path d="m12 3 8 4v6c0 4-8 8-8 8s-8-4-8-8V7Z"/><path d="m8 12 3 3 5-6"/>',
+      education: '<path d="m2 9 10-5 10 5-10 5Zm4 2v6c4 3 8 3 12 0v-6M22 9v8"/>',
+      research: '<circle cx="10" cy="10" r="6"/><path d="m15 15 6 6M7 10h6M10 7v6"/>',
+      milestone: '<path d="M8 3h8v7a4 4 0 0 1-8 0ZM8 5H4v3a4 4 0 0 0 4 4m8-7h4v3a4 4 0 0 1-4 4M12 14v6M8 21h8"/>'
+    };
+    return '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">' + (paths[category] || paths.milestone) + '</svg>';
+  }
+
+  function renderTimeline() {
+    var labels = {};
+    data.categories.forEach(function (category) { labels[category.key] = category.label; });
+
+    function renderItem(item) {
+      var categories = [item.category].concat(item.alsoCategories || []);
+      var status = item.status === "forthcoming" ? "Forthcoming" : item.status === "ongoing" ? "Ongoing" : "";
+      var metadata = [item.organization, item.location, item.role].filter(Boolean);
+      var hasDetails = item.details || item.presentation || (item.links && item.links.length);
+      return '<li class="timeline-item" data-timeline-item data-timeline-categories="' + categories.join(" ") + '">' +
+        '<span class="timeline-item__marker timeline-color--' + item.category + '" aria-hidden="true">' + getTimelineIcon(item.category) + '</span>' +
+        '<article id="' + escapeHtml(item.id) + '" class="timeline-card' + (item.status === "forthcoming" ? ' timeline-card--forthcoming' : '') + '">' +
+          '<div class="timeline-card__when"><p class="timeline-card__date">' + (item.start ? '<time datetime="' + escapeHtml(item.start) + '">' + escapeHtml(item.date) + '</time>' : escapeHtml(item.date)) + '</p>' +
+          (status ? '<span class="timeline-status">' + status + '</span>' : '') + '</div>' +
+          '<div class="timeline-card__body">' +
+          '<h3 class="timeline-card__title">' + escapeHtml(item.title) + '</h3>' +
+          '<p class="timeline-card__meta">' + metadata.map(escapeHtml).join(' · ') + '</p>' +
+          '<div class="timeline-card__extras"><div class="timeline-card__tags">' + categories.map(function (category) {
+            return '<span class="timeline-category timeline-color--' + category + '">' + getTimelineIcon(category) + escapeHtml(labels[category]) + '</span>';
+          }).join("") + '</div>' +
+          (hasDetails ? '<details class="timeline-details"><summary>Details<span class="visually-hidden">: ' + escapeHtml(item.title) + '</span></summary>' +
+          (item.presentation ? '<p class="timeline-card__presentation"><strong>Talk:</strong> ' + escapeHtml(item.presentation) + '</p>' : '') +
+          (item.details ? '<p>' + escapeHtml(item.details) + '</p>' : '') +
+          (item.links && item.links.length ? '<div class="timeline-card__links">' + item.links.map(function (link) {
+            return '<a href="' + escapeHtml(link.url) + '"' + (link.download ? ' download="' + escapeHtml(link.downloadFilename || '') + '"' : '') + '>' + escapeHtml(link.label) + '</a>';
+          }).join("") + '</div>' : '') +
+          '</details>' : '') + '</div></div></article></li>';
+    }
+
+    function renderGroup(id, title, items, forthcoming) {
+      return '<section class="timeline-group' + (forthcoming ? ' timeline-group--forthcoming' : '') + '" data-timeline-group aria-labelledby="' + id + '">' +
+        '<h2 id="' + id + '" class="timeline-group__title">' + title + '</h2>' +
+        '<ol class="timeline-list" role="list">' + items.map(renderItem).join("") + '</ol></section>';
+    }
+
+    var forthcoming = data.items.filter(function (item) { return item.status === "forthcoming"; }).sort(function (a, b) { return (a.start || "9999").localeCompare(b.start || "9999"); });
+    var previous = data.items.filter(function (item) { return item.status !== "forthcoming"; }).sort(function (a, b) { return b.start.localeCompare(a.start); });
+    var years = [];
+    previous.forEach(function (item) {
+      var year = item.start.slice(0, 4);
+      var group = years[years.length - 1];
+      if (!group || group.year !== year) { group = { year: year, items: [] }; years.push(group); }
+      group.items.push(item);
+    });
+
+    app.innerHTML = '<section class="hero">' +
+      '<p class="hero__eyebrow">Mathematics · Research · AI</p><h1 class="hero__title">Timeline</h1>' +
+      '<p class="hero__summary">' + escapeHtml(data.intro) + '</p>' +
+      '<p class="timeline-intro-links"><a href="/talks/">Talks</a> · <a href="/research/">Publications</a> · <a href="/cv/">CV</a></p></section>' +
+      '<aside class="timeline-ongoing" aria-label="Continuing research"><span class="timeline-ongoing__label">Ongoing · Pure mathematics</span>' +
+      '<p>PhD at Lancaster · Banach spaces &amp; operator theory.</p></aside>' +
+      '<div class="timeline-tools" data-timeline-tools hidden>' +
+      '<label class="timeline-mobile-filter" for="timeline-category">Show <select id="timeline-category" aria-label="Filter timeline by category" aria-controls="timeline-entries"><option value="all">All activities</option>' +
+      data.categories.map(function (category) { return '<option value="' + category.key + '">' + escapeHtml(category.label) + '</option>'; }).join("") + '</select></label>' +
+      '<div class="timeline-filters" role="group" aria-label="Filter timeline by category">' +
+      '<button class="timeline-filter" type="button" data-timeline-filter="all" aria-pressed="true" aria-controls="timeline-entries">All activities</button>' +
+      data.categories.map(function (category) {
+        return '<button class="timeline-filter timeline-color--' + category.key + '" type="button" data-timeline-filter="' + category.key + '" aria-pressed="false" aria-controls="timeline-entries">' + getTimelineIcon(category.key) + escapeHtml(category.label) + '</button>';
+      }).join("") + '</div><p class="timeline-results" id="timeline-results" role="status" aria-live="polite" aria-atomic="true">Showing all ' + data.items.length + ' activities</p></div>' +
+      '<div id="timeline-entries">' + renderGroup("timeline-forthcoming", "Forthcoming", forthcoming, true) +
+      years.map(function (group) { return renderGroup("timeline-" + group.year, group.year, group.items, false); }).join("") + '</div>' +
+      '<p class="timeline-note">A selection of activities, with dates at the precision available. Multi-day talk entries use event dates. Forthcoming entries describe confirmed plans.</p>';
+  }
+
+  function setupTimelineFilters() {
+    var tools = document.querySelector("[data-timeline-tools]");
+    if (!tools) { return; }
+    var items = Array.prototype.slice.call(document.querySelectorAll("[data-timeline-item]"));
+    var groups = Array.prototype.slice.call(document.querySelectorAll("[data-timeline-group]"));
+    var buttons = Array.prototype.slice.call(document.querySelectorAll("[data-timeline-filter]"));
+    var result = document.getElementById("timeline-results");
+    var select = document.getElementById("timeline-category");
+    function applyFilter(filter) {
+        var button = buttons.filter(function (item) { return item.getAttribute("data-timeline-filter") === filter; })[0];
+        var count = 0;
+        items.forEach(function (item) {
+          item.hidden = filter !== "all" && item.getAttribute("data-timeline-categories").split(" ").indexOf(filter) === -1;
+          if (!item.hidden) { count += 1; }
+        });
+        groups.forEach(function (group) {
+          group.hidden = !Array.prototype.some.call(group.querySelectorAll("[data-timeline-item]"), function (item) { return !item.hidden; });
+        });
+        buttons.forEach(function (other) { other.setAttribute("aria-pressed", other === button ? "true" : "false"); });
+        if (select) { select.value = filter; }
+        result.textContent = filter === "all" ? "Showing all " + count + " activities" : "Showing " + count + (count === 1 ? " activity" : " activities") + " · " + button.textContent;
+    }
+    buttons.forEach(function (button) {
+      button.addEventListener("click", function () {
+        applyFilter(button.getAttribute("data-timeline-filter"));
+      });
+    });
+    if (select) { select.addEventListener("change", function () { applyFilter(select.value); }); }
+    tools.hidden = false;
+  }
+
   if (isBrowserRuntime) {
     if (page === "research") {
       setupPublicationExplorer();
+    } else if (page === "timeline") {
+      setupTimelineFilters();
     }
 
     return;
@@ -589,5 +698,7 @@
     renderResearch();
   } else if (page === "talks") {
     renderTalks();
+  } else if (page === "timeline") {
+    renderTimeline();
   }
 })();
