@@ -21,7 +21,7 @@ function loadData(relativePath) {
   vm.createContext(context);
   if (relativePath === "data/timeline.js") {
     context.window.siteTimelineSources = Object.fromEntries(
-      ["cv", "talks", "research"].map((name) => [name, loadData(`data/${name}.js`)])
+      ["cv", "talks"].map((name) => [name, loadData(`data/${name}.js`)])
     );
   }
   vm.runInContext(read(relativePath), context, { filename: relativePath });
@@ -359,7 +359,7 @@ timeline.items.forEach((item) => {
   assert(!item.end || item.end >= item.start, `Timeline ends before it starts: ${item.id}`);
   assert([item.category, ...(item.alsoCategories || [])].every((key) => timelineCategories.has(key)), `Unknown timeline category ${item.id}`);
   if (item.status !== "forthcoming") {
-    assert(item.start <= "2026-10-29", `Future activity must be explicitly forthcoming: ${item.id}`);
+    assert(item.start <= "2026-10-31", `Future activity must be explicitly forthcoming: ${item.id}`);
   }
   assert(timelineHtml.includes(`id="${item.id}"`), `Timeline entry is missing from static HTML: ${item.id}`);
 });
@@ -371,9 +371,11 @@ const mathathon = timeline.items.find((item) => item.id === "caltech-mathathon")
 assert(mathathon?.category === "event" && mathathon.role === "Participant" && !mathathon.alsoCategories?.includes("talk"), "Mathathon participation belongs under events rather than talks");
 assert(mathathon?.start === "2026-11-13" && mathathon.end === "2026-11-15" && mathathon.status === "forthcoming", "Mathathon must use its confirmed forthcoming event dates");
 const forthcoming = timeline.items.filter((item) => item.status === "forthcoming");
-assert(forthcoming.length === 7, "Timeline must contain the confirmed programmes, events and invited talks");
-assert(forthcoming.find((item) => item.id === "royal-society-ai")?.role === "Attendee", "Royal Society attendance must not be presented as a talk");
-assert(forthcoming.find((item) => item.id === "saige-maths-workshop")?.role === "Workshop participant", "SAIGE participation must not be presented as a talk");
+assert(forthcoming.length === 5, "Timeline must contain the confirmed forthcoming programmes, events and invited talks");
+const royalSociety = timeline.items.find((item) => item.id === "royal-society-ai");
+assert(royalSociety?.role === "Attendee" && !royalSociety.status && royalSociety.start === "2026-10-29", "Completed Royal Society attendance must appear among past events with its verified date");
+const saige = timeline.items.find((item) => item.id === "saige-maths-workshop");
+assert(saige?.role === "Workshop participant" && saige.status === "ongoing" && saige.start === "2026-10-30" && saige.end === "2026-11-01", "SAIGE must be ongoing during the confirmed workshop dates");
 const iliad = forthcoming.find((item) => item.id === "iliad-fellowship");
 assert(iliad?.start === "2026-11-02" && iliad.end === "2027-02-05" && !iliad.details, "Iliad must retain confirmed dates without invented duties");
 const intensive = forthcoming.find((item) => item.id === "iliad-intensive");

@@ -1,12 +1,11 @@
 (function () {
-  // Historical wording comes from the existing CV, Talks and Publications data.
+  // Historical wording comes from the existing CV and Talks data.
   // Sources are supplied at build time; this file is never loaded by visitors.
   var sources = window.siteTimelineSources;
   var education = sources.cv.sections.find(function (section) { return section.title === "Education"; }).entries;
   var research = sources.cv.sections.find(function (section) { return section.title === "Experience"; }).groups[0].entries;
   var fieldsResearch = research.find(function (entry) { return entry.title.indexOf("FUSRP:") === 0; });
   var icmatResearch = research.find(function (entry) { return entry.organization === "Institute of Mathematical Sciences (ICMAT)"; });
-  var papers = sources.research.categories.reduce(function (items, category) { return items.concat(category.items); }, []);
 
   function educationEntry(index, id, start, end, role, details) {
     var entry = education[index];
@@ -32,15 +31,6 @@
     };
   }
 
-  function researchPaper(title, id, start, date, role, details) {
-    var paper = papers.find(function (item) { return item.title === title; });
-    return {
-      id: id, category: "research", start: start, date: date,
-      title: paper.title, organization: "Preprint · arXiv", role: role,
-      details: details, links: paper.links
-    };
-  }
-
   window.sitePageData = {
     intro: "Research, talks and academic milestones in mathematics, with a growing interest in AI.",
     categories: [
@@ -55,17 +45,17 @@
       // Invited talks from the Talks section of the October 2026 CV.
       // The completed Texas talk and its public slides are recorded on Talks.
       Object.assign(selectedTalk("Banach and Metric Space Geometry Seminar", "tamu-2026", "2026-10-28"), { role: "Invited speaker" }),
-      // Confirmed by Antonio on 27 October 2026. Participation remains forthcoming
-      // until reviewed after the event; a passing date is not proof of attendance.
+      // Completed participation confirmed by Antonio on 31 October 2026.
       {
-        id: "royal-society-ai", category: "event", status: "forthcoming",
+        id: "royal-society-ai", category: "event",
         start: "2026-10-29", date: "29 October 2026",
         title: "Mathematics in the age of AI", organization: "The Royal Society",
         location: "London, UK", role: "Attendee",
         links: [{ label: "Official event", url: "https://portal.royalsociety.org/events/details/?id=baa5caea-28ff-491f-b747-7b9fea66d759" }]
       },
       {
-        id: "saige-maths-workshop", category: "event", status: "forthcoming",
+        // Participation reconfirmed on 31 October, during the workshop.
+        id: "saige-maths-workshop", category: "event", status: "ongoing",
         start: "2026-10-30", end: "2026-11-01", date: "30 October–1 November 2026",
         title: "Maths for AI Safety Workshop", organization: "Safe AI Germany (SAIGE)",
         location: "Bonn, Germany", role: "Workshop participant",
@@ -109,17 +99,7 @@
         details: "JSPS Short-Term Pre/Postdoctoral Fellowship for Research in Japan (forthcoming).",
         links: []
       },
-      researchPaper(
-        "A negative solution to the complemented subspace problem for Banach spaces with unconditional bases",
-        "complemented-subspace-preprint", "2026-09-08", "8 September 2026", "Author",
-        "Banach space theory: complemented subspaces and unconditional bases."
-      ),
       selectedTalk("Brazilian Workshop on Banach Spaces (BWB 2026)", "bwb-2026", "2026-08-26", "", true),
-      researchPaper(
-        "Mathematical Discovery in the Wild: AI-Guided Proofs in Banach Space Theory",
-        "ai-guided-proofs", "2026-07-19", "19 July 2026", "Co-author",
-        "Joint work with Pablo Acuaviva on AI-guided mathematical research in Banach space theory."
-      ),
       selectedTalk("Seminar on Geometry of Banach Spaces", "krakow-2026", "2026-05-20"),
       selectedTalk("Young Functional Analysts' Workshop 2026", "yfaw-2026", "2026-03-23", "2026-03-25", true),
       {
