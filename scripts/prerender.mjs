@@ -67,7 +67,7 @@ function renderPage(page) {
   vm.createContext(context);
   if (page.page === "timeline") {
     context.window.siteTimelineSources = {};
-    ["cv", "talks"].forEach((name) => {
+    ["cv", "talks", "research"].forEach((name) => {
       vm.runInContext(fs.readFileSync(path.join(projectRoot, "data", `${name}.js`), "utf8"), context);
       context.window.siteTimelineSources[name] = context.window.sitePageData;
     });

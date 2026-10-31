@@ -21,7 +21,7 @@ function loadData(relativePath) {
   vm.createContext(context);
   if (relativePath === "data/timeline.js") {
     context.window.siteTimelineSources = Object.fromEntries(
-      ["cv", "talks"].map((name) => [name, loadData(`data/${name}.js`)])
+      ["cv", "talks", "research"].map((name) => [name, loadData(`data/${name}.js`)])
     );
   }
   vm.runInContext(read(relativePath), context, { filename: relativePath });
@@ -295,16 +295,16 @@ research.subjects.forEach((subject) => {
 });
 testPublicationExplorer(research);
 
-// Exercise filtering against mixed talk/attendance entries and hidden year groups.
+// Exercise filtering against mixed activities and academic periods.
 function testTimelineFilters() {
   const items = timeline.items.map((item) => new FakeElement({
     "data-timeline-categories": [item.category, ...(item.alsoCategories || [])].join(" ")
   }));
-  const groupKeys = [...new Set(timeline.items.map((item) => item.status === "forthcoming" ? "forthcoming" : item.start.slice(0, 4)))];
+  const groupKeys = timeline.periods.map((period) => period.id);
   const groups = groupKeys.map((key) => {
     const group = new FakeElement();
     group.querySelectorAll = () => items.filter((_, index) =>
-      (timeline.items[index].status === "forthcoming" ? "forthcoming" : timeline.items[index].start.slice(0, 4)) === key
+      timeline.items[index].period === key
     );
     return group;
   });
@@ -339,10 +339,10 @@ function testTimelineFilters() {
     assert(buttons.filter((item) => item.getAttribute("aria-pressed") === "true").length === 1, "Only one category should be active");
     assert(results.textContent.startsWith(`Showing ${expected} `), "Timeline result announcement is incorrect");
     assert(select.value === key, "Timeline mobile and desktop filters must stay in sync");
-    groups.forEach((group) => assert(group.hidden === group.querySelectorAll().every((item) => item.hidden), "Empty timeline years should be hidden"));
+    groups.forEach((group) => assert(group.hidden === group.querySelectorAll().every((item) => item.hidden), "Periods without matching activities should be hidden when filtering"));
   });
   buttons[0].click();
-  assert(items.every((item) => !item.hidden) && groups.every((group) => !group.hidden), "All activities must restore all entries and year groups");
+  assert(items.every((item) => !item.hidden) && groups.every((group) => !group.hidden), "All activities must restore all entries and academic periods");
   assert(results.textContent === `Showing all ${items.length} activities`, "Timeline reset count is incorrect");
   select.value = "event";
   select.dispatch("change");
@@ -352,9 +352,29 @@ function testTimelineFilters() {
 
 const timelineHtml = read("timeline/index.html");
 const timelineCategories = new Set(timeline.categories.map((category) => category.key));
+const timelinePeriods = new Set(timeline.periods.map((period) => period.id));
+assert(timeline.periods.length === 4 && timelinePeriods.size === 4, "Timeline must have three academic periods and a before-university block");
+assert(countMatches(timelineHtml, /data-timeline-group\s/g) === timeline.periods.length, "Static timeline must include all academic periods");
+timeline.periods.forEach((period) => {
+  assert(timelineHtml.includes(`<h2 id="${period.id}"`), `Missing academic period heading: ${period.id}`);
+  assert(!timeline.items.some((item) => item.id === period.id), "Degrees define periods and must not also appear as activities");
+});
+publications.forEach((paper) => {
+  assert(timeline.items.filter((item) => item.category === "publication" && item.title === paper.title).length === 1, `Publication must appear once in the compact timeline: ${paper.title}`);
+});
+const cvHonours = cv.sections.find((section) => section.title === "Honours and Awards");
+cvHonours.entries.concat(cvHonours.additionalEntries || []).forEach((award) => {
+  const entries = timeline.items.filter((item) => item.title === award.title && [item.category, ...(item.alsoCategories || [])].includes("milestone"));
+  assert(entries.length === (award.title === "Pure Mathematics Prize" ? 2 : 1), `CV award must be represented without duplicate activities: ${award.title}`);
+});
+assert(timeline.items.find((item) => item.title === "EPSRC Doctoral Training Partnership Studentship")?.period === "lancaster-phd", "EPSRC funding belongs with the PhD despite its year-only date");
+assert(timeline.items.find((item) => item.title === "Postgraduate Fellowship Abroad")?.period === "cambridge-part-iii", "The la Caixa fellowship belongs with the Master's");
+assert(timeline.items.find((item) => item.title === "Goñi and Rey Foundation Fellowship")?.period === "before-university", "The 2015–2017 fellowship needs its own earlier period");
+assert(timeline.items.find((item) => item.title === "Spring Into Quant Finance Programme")?.role === "Programme participant", "Programme participation must not be described as receiving a prize");
 assert(new Set(timeline.items.map((item) => item.id)).size === timeline.items.length, "Timeline IDs must be unique");
 timeline.items.forEach((item) => {
   assert(item.title && item.role && item.date, `Incomplete timeline entry ${item.id}`);
+  assert(timelinePeriods.has(item.period), `Activity needs an academic period: ${item.id}`);
   assert(/^20\d{2}(?:-\d{2}(?:-\d{2})?)?$/.test(item.start) || (!item.start && item.status === "forthcoming" && item.date === "Dates to be confirmed"), `Invalid timeline date ${item.id}`);
   assert(!item.end || item.end >= item.start, `Timeline ends before it starts: ${item.id}`);
   assert([item.category, ...(item.alsoCategories || [])].every((key) => timelineCategories.has(key)), `Unknown timeline category ${item.id}`);
@@ -389,6 +409,12 @@ assert(texasTalk?.status !== "forthcoming" && texasTalk?.role === "Invited speak
 const newcastle = timeline.items.find((item) => item.id === "yfaw-2024");
 assert(newcastle?.role === "Attendee" && newcastle.category === "event" && !newcastle.presentation, "Newcastle attendance must not imply a presentation");
 assert(timeline.items.find((item) => item.id === "waterloo-2024")?.date === "8–13 July 2024", "Waterloo timeline entry must use verified official event dates");
+timeline.items.filter((item) => item.presentation).forEach((item) => {
+  const article = timelineHtml.match(new RegExp(`<article id="${item.id}"[\\s\\S]*?</article>`))?.[0] || "";
+  assert(item.category === "talk" || item.alsoCategories?.includes("talk"), `Conference presentation must count as a talk: ${item.id}`);
+  assert(/<h3[^>]*>Talk: /.test(article), `Presentation title must be visible without opening details: ${item.id}`);
+  assert(article.includes("timeline-color--talk") && article.includes("timeline-color--event"), `Conference presentation must show both category icons: ${item.id}`);
+});
 testTimelineFilters();
 
 const talksHtml = read("talks/index.html");

@@ -17,12 +17,22 @@ GitHub Actions repeats the build and fails if the generated pages are stale.
 Pages open in light mode by default, including on devices set to dark mode.
 The theme toggle remembers a visitor's explicit choice when browser storage is available.
 
-The Timeline at `/timeline/` selects education, research experience, talks and
-conferences from the existing page data. Papers are listed on Research rather
-than as individual timeline activities. The selection and additional confirmed
-activities live in `data/timeline.js`; the prerenderer supplies the CV and Talks
-data at build time. Conference entries with a presentation appear in both the
-Events & workshops and Talks filters. Attendance-only entries do not appear in
+The Timeline at `/timeline/` groups compact activity rows into PhD, Master's and
+undergraduate periods, plus an earlier block for pre-university awards. Degrees
+define the period headers rather than individual
+activities; the Berkeley exchange is described within the undergraduate period.
+Period summaries and confirmed activities live in `data/timeline.js`; the
+prerenderer supplies the CV, Talks and Publications data at build time. Papers
+come from the complete Publications data and have their own category filter.
+Awards and scholarships include both the main and earlier entries in the CV.
+Year-only funding awards are assigned to the studies they supported, and
+programme participation retains its own event classification.
+Verified first-submission dates are used for arXiv entries; journal articles and
+proceedings use their publication year unless an exact online date is recorded.
+Forthcoming activities stay within their academic period with a status label.
+Conference entries with a presentation appear in both the
+Events & workshops and Talks filters, show both category icons, and lead with
+the talk title followed by the conference name. Attendance-only entries do not appear in
 the Talks filter or change the Talks page. Forthcoming invited talks are taken
 from the Talks section of the October 2026 CV.
 

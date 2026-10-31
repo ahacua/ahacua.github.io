@@ -1,20 +1,19 @@
 (function () {
-  // Historical wording comes from the existing CV and Talks data.
+  // Historical wording comes from the existing CV, Talks and Publications data.
   // Sources are supplied at build time; this file is never loaded by visitors.
   var sources = window.siteTimelineSources;
   var education = sources.cv.sections.find(function (section) { return section.title === "Education"; }).entries;
   var research = sources.cv.sections.find(function (section) { return section.title === "Experience"; }).groups[0].entries;
   var fieldsResearch = research.find(function (entry) { return entry.title.indexOf("FUSRP:") === 0; });
   var icmatResearch = research.find(function (entry) { return entry.organization === "Institute of Mathematical Sciences (ICMAT)"; });
+  var honours = sources.cv.sections.find(function (section) { return section.title === "Honours and Awards"; });
 
-  function educationEntry(index, id, start, end, role, details) {
+  function academicPeriod(index, id, start, end, dates, summary, notes) {
     var entry = education[index];
     return {
-      id: id, category: "education", start: start, end: end,
-      date: entry.dates, title: entry.title, organization: entry.organization,
-      location: entry.location, role: role, details: details,
-      status: index === 0 ? "ongoing" : "",
-      links: [{ label: "CV", url: "/cv/" }]
+      id: id, start: start, end: end, dates: dates,
+      title: entry.title, organization: entry.organization,
+      location: entry.location, summary: summary, notes: notes || ""
     };
   }
 
@@ -31,14 +30,81 @@
     };
   }
 
+  // First-submission dates verified against the linked arXiv records.
+  var paperDates = {
+    "2609.28584": "2026-09-23", "2609.17283": "2026-09-15",
+    "2609.08921": "2026-09-08", "2608.18257": "2026-08-18",
+    "2609.18993": "2026-07-17", "2608.03825": "2026-08-04",
+    "2607.17388": "2026-07-19", "2607.15075": "2026-07-16",
+    "2607.12935": "2026-07-14", "2607.01467": "2026-07-01",
+    "2606.26417": "2026-06-24", "2605.29854": "2026-05-28",
+    "2605.21711": "2026-05-20",
+    "https://doi.org/10.1016/j.topol.2026.109987": "2026-10-02"
+  };
+
+  function publication(paper, category) {
+    var url = paper.links[0].url;
+    var arxiv = url.match(/arxiv\.org\/abs\/([^/?#]+)/);
+    var key = arxiv ? arxiv[1] : url;
+    var start = paperDates[key] || paper.year;
+    var date = start.length === 10 ? new Date(start + "T12:00:00Z").toLocaleDateString("en-GB", {
+      day: "numeric", month: "short", year: "numeric", timeZone: "UTC"
+    }) : paper.year;
+    return {
+      id: "paper-" + key.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/-$/, ""),
+      category: "publication", start: start, date: date, title: paper.title,
+      organization: paper.venue, role: category.key === "preprints" ? "Preprint" : "Published",
+      details: paper.authors + ". " + paper.details +
+        (arxiv ? ". Date shown is the first arXiv submission." : start.length === 4 ? ". Year shown is the publication year." : ". Date shown is the online publication date."),
+      links: paper.links
+    };
+  }
+
+  function awardEntry(award) {
+    var years = award.year.match(/\b\d{4}\b/g);
+    var programme = /Programme/.test(award.title);
+    var fellowship = /Fellowship|Studentship/.test(award.title);
+    // Associate year-only funding awards with the studies they supported.
+    var period = /EPSRC/.test(award.title) || Number(years[0]) >= 2024 ? "lancaster-phd" :
+      /1912 Senior|Fitzwilliam College|Postgraduate Fellowship Abroad/.test(award.title) ? "cambridge-part-iii" :
+      Number(years[0]) < 2017 ? "before-university" : "ucm-degrees";
+    return {
+      id: "award-" + award.title.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/-$/, ""),
+      category: programme ? "event" : fellowship ? "fellowship" : "milestone",
+      alsoCategories: programme || fellowship ? ["milestone"] : [],
+      start: years[0], end: years.length > 1 ? years[years.length - 1] : "",
+      date: award.year, period: period, title: award.title,
+      organization: award.title === "Goñi and Rey Foundation Fellowship" ? "Goñi and Rey Foundation" : award.organization,
+      role: programme ? "Programme participant" : /Studentship/.test(award.title) ? "Studentship recipient" : fellowship ? "Fellowship recipient" :
+        /Scholarship|Becas/.test(award.title) ? "Scholarship recipient" :
+        /Grant/.test(award.title) ? "Grant recipient" : /Prize/.test(award.title) ? "Prize recipient" : "Award recipient",
+      details: award.title === "Goñi and Rey Foundation Fellowship" ? award.organization + "." : award.note || "",
+      links: [{ label: "CV", url: "/cv/" }]
+    };
+  }
+
   window.sitePageData = {
-    intro: "Research, talks and academic milestones in mathematics, with a growing interest in AI.",
+    intro: "Talks, research and other activities through the chapters of my academic life.",
+    periods: [
+      academicPeriod(0, "lancaster-phd", "2023-10", "", "2023–present",
+        "Banach space theory and operator theory, supervised by Professor Niels J. Laustsen. Supported by an EPSRC Doctoral Training Partnership Studentship."),
+      academicPeriod(1, "cambridge-part-iii", "2022-10", "2023-06", "2022–2023",
+        "Completed with Distinction. Supported by the la Caixa Foundation Postgraduate Fellowship Abroad."),
+      academicPeriod(2, "ucm-degrees", "2017-09", "2022-06", "2017–2022",
+        "Degrees in Mathematics and Physics.",
+        "2019–2020 · Exchange year at the University of California, Berkeley, supported by the UCM–University of California Scholarship."),
+      {
+        id: "before-university", start: "2015", end: "2017", dates: "2015–2017",
+        title: "Before university", organization: "", location: "",
+        summary: "Early awards and scholarships."
+      }
+    ],
     categories: [
+      { key: "publication", label: "Publications" },
       { key: "talk", label: "Talks" },
       { key: "event", label: "Events & workshops" },
       { key: "fellowship", label: "Fellowships" },
-      { key: "education", label: "Education" },
-      { key: "research", label: "Research" },
+      { key: "research", label: "Research experience" },
       { key: "milestone", label: "Awards & milestones" }
     ],
     items: [
@@ -132,16 +198,6 @@
         details: "Awarded for exceptional performance during the first year of the PhD programme.",
         links: [{ label: "CV", url: "/cv/" }]
       },
-      educationEntry(0, "lancaster-phd", "2023-10", "", "Doctoral researcher",
-        "Supervised by Professor Niels J. Laustsen. Supported by an EPSRC Doctoral Training Partnership Studentship. Research in Banach space theory and operator theory."),
-      {
-        id: "cambridge-distinction", category: "milestone", start: "2023-06", date: "June 2023",
-        title: "Part III completed with Distinction", organization: "University of Cambridge",
-        location: "Cambridge, UK", role: "Graduate",
-        details: "Received the 1912 Senior Scholarship and Fitzwilliam College Prize for academic performance.",
-        links: [{ label: "CV", url: "/cv/" }]
-      },
-      educationEntry(1, "cambridge-part-iii", "2022-10", "2023-06", "MASt student", "Supported by the la Caixa Foundation Postgraduate Fellowship Abroad."),
       {
         id: "icmat-2021", category: "research", start: "2021-06", end: "2021-09", date: "June–September 2021",
         title: icmatResearch.title, organization: icmatResearch.organization,
@@ -169,9 +225,16 @@
         location: "Online", role: "Speaker & attendee",
         presentation: "Quantum Walks on Graphs: Perfect State Transfer and Periodicity",
         links: [{ label: "Conference", url: "https://cumc.math.ca/2021/students" }]
-      },
-      educationEntry(3, "berkeley-exchange", "2019-08", "2020-06", "Exchange student", "Supported by the UCM–University of California Scholarship."),
-      educationEntry(2, "ucm-degrees", "2017-09", "2022-06", "Undergraduate student", "Degrees in Mathematics and Physics. Physics thesis: Resilient Source Seeking with Robot Swarms.")
-    ]
+      }
+    ].concat(sources.research.categories.reduce(function (items, category) {
+      return items.concat(category.items.map(function (paper) { return publication(paper, category); }));
+    }, [])).concat(honours.entries.concat(honours.additionalEntries || []).filter(function (award) {
+      // The two Lancaster prizes above retain their separately confirmed years.
+      return award.title !== "Pure Mathematics Prize";
+    }).map(awardEntry)).map(function (item) {
+      item.period = item.period || (!item.start || item.start >= "2023-10" ? "lancaster-phd" :
+        item.start >= "2022-10" ? "cambridge-part-iii" : "ucm-degrees");
+      return item;
+    })
   };
 })();
