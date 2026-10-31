@@ -143,13 +143,6 @@
       },
       educationEntry(1, "cambridge-part-iii", "2022-10", "2023-06", "MASt student", "Supported by the la Caixa Foundation Postgraduate Fellowship Abroad."),
       {
-        id: "ucm-graduation", category: "milestone", start: "2022-06", date: "June 2022",
-        title: "Graduated first in Mathematics and Physics", organization: "Universidad Complutense de Madrid",
-        location: "Madrid, Spain", role: "Graduate",
-        details: "Ranked 1st of 171 graduates in Mathematics and 1st of 247 in Physics. Recipient of the Bachelor's Degree Extraordinary Award in both subjects.",
-        links: [{ label: "CV", url: "/cv/" }]
-      },
-      {
         id: "icmat-2021", category: "research", start: "2021-06", end: "2021-09", date: "June–September 2021",
         title: icmatResearch.title, organization: icmatResearch.organization,
         location: icmatResearch.location, role: "Research grant recipient",
