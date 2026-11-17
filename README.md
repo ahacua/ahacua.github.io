@@ -39,7 +39,5 @@ from the Talks section of the October 2026 CV.
 Forthcoming status is editorial: review it after participation is confirmed,
 rather than treating a passing date as proof of attendance. Royal Society
 attendance is completed; the SAIGE workshop is ongoing as of 31 October 2026.
-Keep dates only as precise as the source supports. The Iliad entry follows the
-October 2026 CV's
-“Iliad Fellowship (forthcoming)” wording, without adding research duties. The
-Intensive is a separate activity with separately confirmed participation and dates.
+Keep dates only as precise as the source supports. The Iliad Fellowship and
+Intensive are separate activities with independently confirmed dates.

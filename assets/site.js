@@ -591,6 +591,7 @@
       var metadata = [item.presentation ? item.title : item.organization, item.location, item.role].filter(Boolean);
       var date = item.date.replace(/January/g, "Jan").replace(/February/g, "Feb").replace(/March/g, "Mar").replace(/April/g, "Apr").replace(/June/g, "Jun").replace(/July/g, "Jul").replace(/August/g, "Aug").replace(/September/g, "Sep").replace(/October/g, "Oct").replace(/November/g, "Nov").replace(/December/g, "Dec");
       var categoryLabel = categories.map(function (key) { return labels[key]; }).join(" · ");
+      var details = item.details && (item.details.html || escapeHtml(item.details));
       return '<li class="timeline-item" data-timeline-item data-timeline-categories="' + categories.join(" ") + '">' +
         '<article id="' + escapeHtml(item.id) + '" class="timeline-card">' +
         '<div class="timeline-card__when">' + (item.start ? '<time datetime="' + escapeHtml(item.start) + '">' + escapeHtml(date) + '</time>' : escapeHtml(date)) + '</div>' +
@@ -603,7 +604,7 @@
         (item.links && item.links.length ? '<span class="timeline-card__links">' + item.links.map(function (link) {
           return '<a href="' + escapeHtml(link.url) + '"' + (link.download ? ' download="' + escapeHtml(link.downloadFilename || '') + '"' : '') + '>' + escapeHtml(link.label) + '</a>';
         }).join("") + '</span>' : '') +
-        (item.details ? '<details class="timeline-details"><summary>Details<span class="visually-hidden">: ' + escapeHtml(item.presentation || item.title) + '</span></summary><p>' + escapeHtml(item.details) + '</p></details>' : '') + '</div></article></li>';
+        (details ? '<details class="timeline-details"><summary>Details<span class="visually-hidden">: ' + escapeHtml(item.presentation || item.title) + '</span></summary><p>' + details + '</p></details>' : '') + '</div></article></li>';
     }
     function renderPeriod(period) {
       var place = [period.organization, period.location].filter(Boolean).join(" · ");

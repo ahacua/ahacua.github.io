@@ -128,28 +128,27 @@
         links: [{ label: "Official event", url: "https://safeaigermany.org/programmes/maths-workshop/" }]
       },
       {
-        id: "iliad-fellowship", category: "fellowship", status: "forthcoming",
+        id: "iliad-fellowship", category: "fellowship",
         start: "2026-11-02", end: "2027-02-05", date: "2 November 2026–5 February 2027",
-        // October 2026 CV, Selected Research Experience:
-        // "Iliad Fellowship (forthcoming)". No research duties are stated.
         title: "Iliad Fellowship", role: "Fellow",
         links: [{ label: "Fellowship", url: "https://www.iliad.ac/fellowship" }]
       },
       {
-        id: "iliad-intensive", category: "event", status: "forthcoming",
-        start: "2026-11-02", end: "2026-11-27", date: "2–27 November 2026",
+        id: "iliad-intensive", category: "event",
+        start: "2026-11-02", end: "2027-03-05", date: "2 November 2026–5 March 2027",
         // Participation confirmed separately by Antonio on 27 October 2026.
         title: "Iliad Intensive", location: "London, UK", role: "Participant",
         links: [{ label: "Intensive", url: "https://www.iliad.ac/intensive" }, { label: "Programme dates", url: "https://www.iliad.ac/calendar" }]
       },
       {
-        // Participation confirmed by Antonio on 30 October 2026.
-        id: "caltech-mathathon", category: "event", status: "forthcoming",
+        id: "caltech-mathathon", category: "event",
         start: "2026-11-13", end: "2026-11-15", date: "13–15 November 2026",
         title: "Mathathon: Old Problems, New Proofs", organization: "Caltech",
         location: "Pasadena, California, USA", role: "Participant",
-        details: "On-site round.",
-        links: [{ label: "Official event", url: "https://mathathonchallenge.com/" }]
+        details: {
+          html: "Our team won the Computation / Applied Mathematics category in Round 1 of the Caltech Mathathon Challenge with our project, <em>NP-Completeness of the HP Folding Model</em>."
+        },
+        links: [{ label: "Official event", url: "https://www.caltech.edu/campus-life-events/calendar/caltech-mathathon-challenge-1" }]
       },
       {
         id: "paris-2026", category: "talk", status: "forthcoming",
